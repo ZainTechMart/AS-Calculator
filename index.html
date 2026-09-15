@@ -3,111 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movable Baby Picture</title>
+    <title>AI Image Generator</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            height: 100vh;
-            width: 100vw;
-            background-color: #0d1117; /* GitHub Dark Theme */
+            background-color: #0d1117;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        #movable-img {
-            width: 280px;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            cursor: grab;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            user-select: none;
-            touch-action: none;
-        }
-
-        #movable-img:active {
-            cursor: grabbing;
-            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
-        }
-
-        .instructions {
-            position: fixed;
-            bottom: 20px;
-            color: #8b949e;
-            font-size: 16px;
+        .container {
+            background-color: #161b22;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
             text-align: center;
+            border: 1px solid #30363d;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #58a6ff;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background-color: #0d1117;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #58a6ff;
+        }
+
+        button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #238636;
+            color: #white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #2ea043;
+        }
+
+        .image-box {
+            margin-top: 20px;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #30363d;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            display: none;
+            border-radius: 10px;
+        }
+
+        .loading {
+            display: none;
+            color: #8b949e;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <div class="instructions">
-        👉 Picture ko mouse ya finger se pakad kar drag karein!
+    <div class="container">
+        <h2>🎨 AI Image Generator</h2>
+        
+        <div class="input-group">
+            <input type="text" id="prompt-input" placeholder="Yahan apni command likhein (e.g. A cute baby playing with a cat)...">
+            <button onclick="generateImage()">Picture Banayein</button>
+        </div>
+
+        <div class="image-box">
+            <p id="placeholder-text" style="color: #8b949e;">Aap ki picture yahan nazar aaye gi</p>
+            <p id="loading-text" class="loading">⏳ Picture ban rahi hai, thoda intazar karein...</p>
+            <img id="generated-img" alt="AI Generated Image">
+        </div>
     </div>
 
-    <!-- Aap ki baby_image.jpg file yahan link hai -->
-    <img id="movable-img" src="baby_image.jpg" alt="Movable Baby Picture">
-
     <script>
-        const img = document.getElementById('movable-img');
+        function generateImage() {
+            const prompt = document.getElementById('prompt-input').value.trim();
+            const imgElement = document.getElementById('generated-img');
+            const placeholderText = document.getElementById('placeholder-text');
+            const loadingText = document.getElementById('loading-text');
 
-        let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
+            if (!prompt) {
+                alert('Meherbani karke koi command/text likhein!');
+                return;
+            }
 
-        img.addEventListener('mousedown', startDrag);
-        img.addEventListener('touchstart', startDrag, { passive: false });
+            // Hide old image & show loading
+            imgElement.style.display = 'none';
+            placeholderText.style.display = 'none';
+            loadingText.style.display = 'block';
 
-        window.addEventListener('mousemove', drag);
-        window.addEventListener('touchmove', drag, { passive: false });
-
-        window.addEventListener('mouseup', stopDrag);
-        window.addEventListener('touchend', stopDrag);
-
-        function startDrag(e) {
-            isDragging = true;
+            // Clean prompt for URL
+            const encodedPrompt = encodeURIComponent(prompt);
             
-            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            // Pollinations AI URL (Free & No API Key required)
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true`;
 
-            startX = clientX;
-            startY = clientY;
+            // Load new image
+            imgElement.src = imageUrl;
 
-            const rect = img.getBoundingClientRect();
-            initialLeft = rect.left;
-            initialTop = rect.top;
+            imgElement.onload = function() {
+                loadingText.style.display = 'none';
+                imgElement.style.display = 'block';
+            };
 
-            img.style.transform = 'none';
-            img.style.left = `${initialLeft}px`;
-            img.style.top = `${initialTop}px`;
-        }
-
-        function drag(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-
-            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-
-            const deltaX = clientX - startX;
-            const deltaY = clientY - startY;
-
-            img.style.left = `${initialLeft + deltaX}px`;
-            img.style.top = `${initialTop + deltaY}px`;
-        }
-
-        function stopDrag() {
-            isDragging = false;
+            imgElement.onerror = function() {
+                loadingText.style.display = 'none';
+                placeholderText.innerText = '❌ Picture banane me masla hua. Dobara koshish karein.';
+                placeholderText.style.display = 'block';
+            };
         }
     </script>
 </body>
