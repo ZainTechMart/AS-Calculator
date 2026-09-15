@@ -1,366 +1,484 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Bus Simulator Game</title>
+    <title>AI Pro Video Generator Studio</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #111;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
+            background-color: #0b0e14;
+            color: #e6edf3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        #game-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
+        /* Header Navigation */
+        header {
+            background-color: #161b22;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        /* Dashboard UI (Speedometer & Controls) */
-        .dashboard {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(13, 17, 23, 0.85);
-            padding: 15px 25px;
-            border-radius: 12px;
-            border: 1px solid #30363d;
-            color: #fff;
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
-
-        .speed-val {
-            font-size: 32px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
             font-weight: bold;
             color: #58a6ff;
         }
 
-        .unit {
-            font-size: 14px;
-            color: #8b949e;
+        .logo i {
+            font-size: 26px;
+            color: #a371f7;
         }
 
-        .controls-hint {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(13, 17, 23, 0.8);
-            padding: 12px 20px;
-            border-radius: 10px;
-            color: #8b949e;
-            font-size: 14px;
-            border: 1px solid #30363d;
-            z-index: 10;
-        }
-
-        .controls-hint b {
-            color: #58a6ff;
-        }
-
-        /* Mobile On-Screen Touch Controls */
-        .touch-controls {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+        /* Main Studio Layout */
+        .studio-container {
             display: flex;
-            gap: 15px;
-            z-index: 10;
+            flex: 1;
+            height: calc(100vh - 65px);
+            overflow: hidden;
         }
 
-        .btn {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
+        /* Left Control Panel */
+        .sidebar {
+            width: 380px;
+            background-color: #161b22;
+            padding: 25px;
+            border-right: 1px solid #30363d;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8b949e;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        textarea, select, input[type="text"] {
+            width: 100%;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        textarea:focus, select:focus, input[type="text"]:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        /* Ratio Buttons Grid */
+        .ratio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .ratio-btn {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+
+        .ratio-btn.active {
+            border-color: #a371f7;
+            background-color: rgba(163, 113, 247, 0.1);
+            color: #a371f7;
+        }
+
+        .ratio-btn:hover {
+            border-color: #58a6ff;
+        }
+
+        /* Generate Button */
+        .btn-generate {
+            background: linear-gradient(135deg, #238636, #2ea043);
             color: white;
-            font-size: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            touch-action: manipulation;
+            gap: 10px;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
         }
 
-        .btn:active {
-            background: rgba(88, 166, 255, 0.6);
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(35, 134, 54, 0.5);
+        }
+
+        /* Main Workspace Screen */
+        .workspace {
+            flex: 1;
+            padding: 30px;
+            background-color: #0d1117;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .viewport-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            flex: 1;
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-preview {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 8px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #8b949e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #30363d;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            color: #58a6ff;
+        }
+
+        .loading-spinner i {
+            font-size: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Video Action Bar */
+        .action-bar {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            background: rgba(22, 27, 34, 0.9);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(8px);
+            border: 1px solid #30363d;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #30363d;
+            color: #58a6ff;
+        }
+
+        /* History Gallery Grid */
+        .gallery-section {
+            margin-top: 10px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .gallery-item {
+            width: 100%;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #30363d;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .gallery-item:hover {
+            border-color: #58a6ff;
+            transform: scale(1.03);
+        }
+
+        @media (max-width: 900px) {
+            .studio-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+            }
         }
     </style>
-    <!-- Three.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-    <div class="controls-hint">
-        🚌 <b>Bus Controls:</b><br>
-        Accelerate: <b>W / Up Arrow</b><br>
-        Brake / Reverse: <b>S / Down Arrow</b><br>
-        Steer Left/Right: <b>A / D</b> or <b>Left/Right Arrows</b>
-    </div>
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>AI Pro Video Studio</span>
+        </div>
+        <div style="font-size: 13px; color: #8b949e;">Powered by Pollinations Engine</div>
+    </header>
 
-    <div class="dashboard">
-        <div class="speed-val"><span id="speed">0</span> <span class="unit">KM/H</span></div>
-        <div class="unit">Gear: <b id="gear" style="color:#2ea043;">D</b></div>
-    </div>
+    <div class="studio-container">
+        <!-- Control Panel -->
+        <div class="sidebar">
+            <div class="form-group">
+                <label class="section-title"><i class="fa-solid fa-pen-nib"></i> Video Prompt / Command</label>
+                <textarea id="prompt" placeholder="E.g., A cinematic drone shot of a futuristic neon city in rain, 8k resolution, photorealistic..."></textarea>
+            </div>
 
-    <!-- Touch Buttons for Mobile -->
-    <div class="touch-controls">
-        <div class="btn" id="btn-left">◀</div>
-        <div class="btn" id="btn-right">▶</div>
-        <div class="btn" id="btn-brake">🛑</div>
-        <div class="btn" id="btn-gas">🚀</div>
-    </div>
+            <!-- Preset Style Selection -->
+            <div class="form-group">
+                <label class="section-title"><i class="fa-solid fa-palette"></i> Art Style Preset</label>
+                <select id="style-preset">
+                    <option value="">Default (Natural)</option>
+                    <option value=", cinematic lighting, ultra-realistic, photorealistic 8k">Cinematic Movie</option>
+                    <option value=", 3D Pixar Disney style animation, vibrant colors">3D Animation / Cartoon</option>
+                    <option value=", Cyberpunk aesthetic, neon glow, futuristic city">Cyberpunk Futuristic</option>
+                    <option value=", Japanese anime style, Studio Ghibli vibes">Anime Style</option>
+                    <option value=", Slow motion drone footage, hyper-detailed">Drone Cinematic Shot</option>
+                </select>
+            </div>
 
-    <div id="canvas-container"></div>
+            <!-- Aspect Ratio -->
+            <div class="form-group">
+                <label class="section-title"><i class="fa-solid fa-crop"></i> Aspect Ratio</label>
+                <div class="ratio-grid">
+                    <div class="ratio-btn active" onclick="setRatio('16:9', 768, 432, this)">
+                        <i class="fa-solid fa-desktop"></i> 16:9
+                    </div>
+                    <div class="ratio-btn" onclick="setRatio('9:16', 432, 768, this)">
+                        <i class="fa-solid fa-mobile-screen"></i> 9:16
+                    </div>
+                    <div class="ratio-btn" onclick="setRatio('1:1', 512, 512, this)">
+                        <i class="fa-solid fa-square"></i> 1:1
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Model Selector -->
+            <div class="form-group">
+                <label class="section-title"><i class="fa-solid fa-cpu"></i> AI Engine Model</label>
+                <select id="ai-model">
+                    <option value="turbo">Pollinations Turbo (Fastest)</option>
+                    <option value="flux">Flux AI Generator (High Quality)</option>
+                </select>
+            </div>
+
+            <!-- Generate Button -->
+            <button class="btn-generate" onclick="generateVideo()">
+                <i class="fa-solid fa-play"></i> Generate Video
+            </button>
+
+            <!-- Gallery History -->
+            <div class="gallery-section">
+                <label class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> History Session</label>
+                <div class="gallery-grid" id="history-gallery">
+                    <!-- History images will load here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Preview Screen -->
+        <div class="workspace">
+            <div class="viewport-card">
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state">
+                    <i class="fa-solid fa-clapperboard"></i>
+                    <p>Apni command dein aur "Generate Video" par click karein!</p>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="loading-spinner" id="loading-spinner">
+                    <i class="fa-solid fa-spinner"></i>
+                    <p>AI Video banayi ja rahi hai, thoda intazar karein...</p>
+                </div>
+
+                <!-- Video / Animation Render Element -->
+                <img id="output-media" class="media-preview" alt="AI Generated Output">
+
+                <!-- Floating Controls -->
+                <div class="action-bar" id="action-bar">
+                    <button class="action-btn" onclick="downloadMedia()"><i class="fa-solid fa-download"></i> Download</button>
+                    <button class="action-btn" onclick="fullscreenMedia()"><i class="fa-solid fa-expand"></i> Fullscreen</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        let scene, camera, renderer, bus, wheels = [];
-        let speed = 0;
-        let angle = 0;
-        let maxSpeed = 1.2;
-        let acceleration = 0.015;
-        let friction = 0.98;
-        let steeringSensitivity = 0.03;
+        let selectedWidth = 768;
+        let selectedHeight = 432;
+        let currentMediaUrl = '';
 
-        const keys = { forward: false, backward: false, left: false, right: false };
-
-        function init() {
-            // 1. Scene Setup
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x87ceeb); // Sky blue
-            scene.fog = new THREE.FogExp2(0x87ceeb, 0.015);
-
-            // 2. Camera Setup
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-            // 3. Renderer
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.shadowMap.enabled = true;
-            document.body.appendChild(renderer.domElement);
-
-            // 4. Lights
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(20, 40, 20);
-            dirLight.castShadow = true;
-            scene.add(dirLight);
-
-            // 5. Environment (Road & Grass Ground)
-            createEnvironment();
-
-            // 6. Create 3D Indonesian Style Bus Model
-            createBus();
-
-            // Event Listeners
-            window.addEventListener('keydown', (e) => handleKeys(e, true));
-            window.addEventListener('keyup', (e) => handleKeys(e, false));
-            window.addEventListener('resize', onWindowResize);
-
-            setupTouchControls();
-
-            // Start Game Loop
-            animate();
+        function setRatio(ratio, width, height, element) {
+            selectedWidth = width;
+            selectedHeight = height;
+            
+            document.querySelectorAll('.ratio-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
         }
 
-        function createEnvironment() {
-            // Grass Ground
-            const groundGeo = new THREE.PlaneGeometry(1000, 1000);
-            const groundMat = new THREE.MeshStandardMaterial({ color: 0x2e8b57 });
-            const ground = new THREE.Mesh(groundGeo, groundMat);
-            ground.rotation.x = -Math.PI / 2;
-            ground.receiveShadow = true;
-            scene.add(ground);
+        function generateVideo() {
+            const promptText = document.getElementById('prompt').value.trim();
+            const stylePreset = document.getElementById('style-preset').value;
+            const model = document.getElementById('ai-model').value;
 
-            // Long Highway Road
-            const roadGeo = new THREE.PlaneGeometry(16, 1000);
-            const roadMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
-            const road = new THREE.Mesh(roadGeo, roadMat);
-            road.rotation.x = -Math.PI / 2;
-            road.position.y = 0.01;
-            scene.add(road);
-
-            // Road Lines
-            for (let i = -500; i < 500; i += 20) {
-                const lineGeo = new THREE.PlaneGeometry(0.5, 8);
-                const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const line = new THREE.Mesh(lineGeo, lineMat);
-                line.rotation.x = -Math.PI / 2;
-                line.position.set(0, 0.02, i);
-                scene.add(line);
+            if (!promptText) {
+                alert('Meherbani karke koi prompt/command likhein!');
+                return;
             }
 
-            // Trees along the road
-            for (let i = -400; i < 400; i += 30) {
-                createTree(-15, i);
-                createTree(15, i);
-            }
-        }
+            // Combine Prompt with Style Preset
+            const fullPrompt = promptText + stylePreset;
+            const encodedPrompt = encodeURIComponent(fullPrompt);
 
-        function createTree(x, z) {
-            const trunkGeo = new THREE.CylinderGeometry(0.5, 0.7, 4);
-            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8b4513 });
-            const trunk = new THREE.Mesh(trunkGeo, trunkMat);
-            trunk.position.set(x, 2, z);
+            // Hide old media & show loading
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('output-media').style.display = 'none';
+            document.getElementById('action-bar').style.display = 'none';
+            document.getElementById('loading-spinner').style.display = 'block';
 
-            const leavesGeo = new THREE.ConeGeometry(3, 7, 8);
-            const leavesMat = new THREE.MeshStandardMaterial({ color: 0x006400 });
-            const leaves = new THREE.Mesh(leavesGeo, leavesMat);
-            leaves.position.set(x, 6, z);
+            // Random Seed for fresh output
+            const seed = Math.floor(Math.random() * 1000000);
 
-            scene.add(trunk);
-            scene.add(leaves);
-        }
+            // Pollinations Video / Animated URL
+            const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${selectedWidth}&height=${selectedHeight}&seed=${seed}&model=${model}&nologo=true`;
 
-        function createBus() {
-            bus = new THREE.Group();
+            const imgElement = document.getElementById('output-media');
+            imgElement.src = url;
 
-            // Bus Main Body (Red/White Indonesian Bus style)
-            const bodyGeo = new THREE.BoxGeometry(2.5, 2.8, 8);
-            const bodyMat = new THREE.MeshStandardMaterial({ color: 0xda251c }); // BUSSID Red Color
-            const body = new THREE.Mesh(bodyGeo, bodyMat);
-            body.position.y = 1.8;
-            body.castShadow = true;
-            bus.add(body);
+            imgElement.onload = function() {
+                document.getElementById('loading-spinner').style.display = 'none';
+                imgElement.style.display = 'block';
+                document.getElementById('action-bar').style.display = 'flex';
+                currentMediaUrl = url;
 
-            // Bus Roof
-            const roofGeo = new THREE.BoxGeometry(2.4, 0.2, 7.8);
-            const roofMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-            const roof = new THREE.Mesh(roofGeo, roofMat);
-            roof.position.y = 3.2;
-            bus.add(roof);
-
-            // Windows (Front & Sides Glass)
-            const glassMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1 });
-
-            // Front Windshield
-            const frontGlassGeo = new THREE.BoxGeometry(2.3, 1.2, 0.1);
-            const frontGlass = new THREE.Mesh(frontGlassGeo, glassMat);
-            frontGlass.position.set(0, 2.3, 3.96);
-            bus.add(frontGlass);
-
-            // Side Windows
-            const sideGlassGeo = new THREE.BoxGeometry(2.52, 1, 6.5);
-            const sideGlass = new THREE.Mesh(sideGlassGeo, glassMat);
-            sideGlass.position.set(0, 2.3, 0);
-            bus.add(sideGlass);
-
-            // Headlights
-            const lightGeo = new THREE.BoxGeometry(0.5, 0.3, 0.1);
-            const lightMat = new THREE.MeshBasicMaterial({ color: 0xffffaa });
-            const leftLight = new THREE.Mesh(lightGeo, lightMat);
-            leftLight.position.set(-0.8, 1, 4.01);
-            const rightLight = new THREE.Mesh(lightGeo, lightMat);
-            rightLight.position.set(0.8, 1, 4.01);
-            bus.add(leftLight);
-            bus.add(rightLight);
-
-            // Wheels (4 Wheels)
-            const wheelGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.5, 16);
-            const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
-
-            const wheelPositions = [
-                [-1.3, 0.6, 2.5],  // Front Left
-                [1.3, 0.6, 2.5],   // Front Right
-                [-1.3, 0.6, -2.5], // Rear Left
-                [1.3, 0.6, -2.5]   // Rear Right
-            ];
-
-            wheelPositions.forEach(pos => {
-                const wheel = new THREE.Mesh(wheelGeo, wheelMat);
-                wheel.rotation.z = Math.PI / 2;
-                wheel.position.set(...pos);
-                wheel.castShadow = true;
-                bus.add(wheel);
-                wheels.push(wheel);
-            });
-
-            scene.add(bus);
-        }
-
-        function handleKeys(e, isPressed) {
-            if (e.key === 'w' || e.key === 'ArrowUp') keys.forward = isPressed;
-            if (e.key === 's' || e.key === 'ArrowDown') keys.backward = isPressed;
-            if (e.key === 'a' || e.key === 'ArrowLeft') keys.left = isPressed;
-            if (e.key === 'd' || e.key === 'ArrowRight') keys.right = isPressed;
-        }
-
-        function setupTouchControls() {
-            const bindTouch = (id, key) => {
-                const el = document.getElementById(id);
-                el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
-                el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+                // Add to History Gallery
+                addToHistory(url);
             };
-            bindTouch('btn-gas', 'forward');
-            bindTouch('btn-brake', 'backward');
-            bindTouch('btn-left', 'left');
-            bindTouch('btn-right', 'right');
+
+            imgElement.onerror = function() {
+                document.getElementById('loading-spinner').style.display = 'none';
+                alert('Video generate karne mein error aaya, dobara koshish karein.');
+            };
         }
 
-        function updatePhysics() {
-            // Acceleration & Braking
-            if (keys.forward) {
-                if (speed < maxSpeed) speed += acceleration;
-            } else if (keys.backward) {
-                if (speed > -maxSpeed / 2) speed -= acceleration;
-            } else {
-                speed *= friction; // Natural Slowdown
+        function addToHistory(url) {
+            const gallery = document.getElementById('history-gallery');
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = 'gallery-item';
+            img.onclick = function() {
+                document.getElementById('output-media').src = url;
+                document.getElementById('output-media').style.display = 'block';
+                document.getElementById('empty-state').style.display = 'none';
+                document.getElementById('action-bar').style.display = 'flex';
+                currentMediaUrl = url;
+            };
+            gallery.prepend(img);
+        }
+
+        function downloadMedia() {
+            if (!currentMediaUrl) return;
+            const a = document.createElement('a');
+            a.href = currentMediaUrl;
+            a.download = `AI_Video_${Date.now()}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function fullscreenMedia() {
+            const media = document.getElementById('output-media');
+            if (media.requestFullscreen) {
+                media.requestFullscreen();
             }
-
-            // Steering
-            if (Math.abs(speed) > 0.01) {
-                const dir = speed > 0 ? 1 : -1;
-                if (keys.left) angle += steeringSensitivity * dir;
-                if (keys.right) angle -= steeringSensitivity * dir;
-            }
-
-            // Move Bus position
-            bus.rotation.y = angle;
-            bus.position.x += Math.sin(angle) * speed;
-            bus.position.z += Math.cos(angle) * speed;
-
-            // Rotate Wheels
-            wheels.forEach(w => w.rotation.x += speed * 0.5);
-
-            // Update Camera Third-Person Tracking (Smooth follow camera)
-            const cameraOffset = new THREE.Vector3(0, 5, -12).applyAxisAngle(new THREE.Vector3(0, 1, 0), angle);
-            camera.position.x = bus.position.x + cameraOffset.x;
-            camera.position.y = bus.position.y + cameraOffset.y;
-            camera.position.z = bus.position.z + cameraOffset.z;
-            camera.lookAt(bus.position.x, bus.position.y + 1.5, bus.position.z);
-
-            // Update Dashboard UI
-            const speedKmh = Math.floor(Math.abs(speed) * 90);
-            document.getElementById('speed').innerText = speedKmh;
-            document.getElementById('gear').innerText = speed >= 0 ? 'D' : 'R';
         }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            updatePhysics();
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        init();
     </script>
 </body>
 </html>
