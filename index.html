@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movable Image for GitHub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            background-color: #0d1117; /* GitHub Dark Theme Color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+        }
+
+        /* Movable Image Styling */
+        #movable-img {
+            width: 280px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            cursor: grab;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            user-select: none;
+            touch-action: none;
+            transition: box-shadow 0.2s ease;
+        }
+
+        #movable-img:active {
+            cursor: grabbing;
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            color: #8b949e;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instructions">
+        👉 Picture ko mouse ya finger se pakad kar kahin bhi move karein!
+    </div>
+
+    <!-- Apni Image ka path yahan rakhein -->
+    <img id="movable-img" src="baby_image.jpg" alt="Movable Baby Picture">
+
+    <script>
+        const img = document.getElementById('movable-img');
+
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+
+        // Mouse & Touch events
+        img.addEventListener('mousedown', startDrag);
+        img.addEventListener('touchstart', startDrag, { passive: false });
+
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('touchmove', drag, { passive: false });
+
+        window.addEventListener('mouseup', stopDrag);
+        window.addEventListener('touchend', stopDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            
+            // Get client X and Y (Touch or Mouse)
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+            startX = clientX;
+            startY = clientY;
+
+            // Current position of image
+            const rect = img.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+
+            // Reset CSS transform for smooth dragging
+            img.style.transform = 'none';
+            img.style.left = `${initialLeft}px`;
+            img.style.top = `${initialTop}px`;
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+            const deltaX = clientX - startX;
+            const deltaY = clientY - startY;
+
+            img.style.left = `${initialLeft + deltaX}px`;
+            img.style.top = `${initialTop + deltaY}px`;
+        }
+
+        function stopDrag() {
+            isDragging = false;
+        }
+    </script>
+</body>
+</html>
