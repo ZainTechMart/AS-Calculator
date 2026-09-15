@@ -3,345 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real AI Animated Video Generator</title>
+    <title>AI Smart Assistant Pro</title>
+    <!-- FontAwesome for App Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: #0d1117;
-            color: #fff;
-            min-height: 100vh;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
+        /* App Bar Header */
         header {
-            background-color: #161b22;
-            padding: 15px 30px;
-            border-bottom: 1px solid #30363d;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
+            background: #161b22;
+            padding: 16px;
+            text-align: center;
+            font-size: 18px;
             font-weight: bold;
             color: #58a6ff;
-        }
-
-        .main-container {
+            border-bottom: 1px solid #30363d;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             display: flex;
-            flex: 1;
-            height: calc(100vh - 60px);
-        }
-
-        .sidebar {
-            width: 360px;
-            background: #161b22;
-            padding: 25px;
-            border-right: 1px solid #30363d;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        label {
-            font-size: 13px;
-            color: #8b949e;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        input, select, textarea {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            outline: none;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #58a6ff;
-        }
-
-        .btn-render {
-            background: linear-gradient(135deg, #238636, #2ea043);
-            color: #fff;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             gap: 10px;
         }
 
-        .btn-render:hover {
-            opacity: 0.9;
+        /* App Navigation Tabs */
+        .tab-bar {
+            display: flex;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
         }
 
-        .workspace {
+        .tab-btn {
             flex: 1;
-            padding: 30px;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            color: #8b949e;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #58a6ff;
+            border-bottom-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        /* Screen Container */
+        .content-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            position: relative;
         }
 
-        .preview-box {
+        .tab-content {
+            display: none;
             width: 100%;
-            max-width: 720px;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        canvas {
-            display: none;
-        }
-
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: none;
-        }
-
-        .status-msg {
-            color: #8b949e;
-            text-align: center;
-        }
-
-        .controls-bar {
-            margin-top: 20px;
-            display: none;
+            max-width: 500px;
+            flex-direction: column;
             gap: 15px;
         }
 
-        .btn-download {
-            background: #1f6beb;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
+        .tab-content.active {
             display: flex;
+        }
+
+        /* Input Controls */
+        textarea, input, select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            background-color: #161b22;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            border-color: #58a6ff;
+        }
+
+        textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        /* App Action Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(35, 134, 54, 0.3);
+            display: flex;
+            justify-content: center;
             align-items: center;
             gap: 8px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Output Box */
+        .output-box {
+            margin-top: 10px;
+            background-color: #161b22;
+            border: 1px dashed #30363d;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .output-box img {
+            max-width: 100%;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .output-text {
+            color: #c9d1d9;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: left;
+            width: 100%;
+            white-space: pre-wrap;
+        }
+
+        .loading-spinner {
+            display: none;
+            color: #58a6ff;
+            font-size: 14px;
+        }
+
+        /* Ad Banner Placeholder (Play Store Monetization) */
+        .ad-banner {
+            background-color: #161b22;
+            border-top: 1px solid #30363d;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: #8b949e;
         }
     </style>
 </head>
 <body>
 
+    <!-- Top App Header -->
     <header>
-        <i class="fa-solid fa-video"></i> Real MP4 Video Render Studio
+        <i class="fa-solid fa-robot"></i> AI Smart Assistant Pro
     </header>
 
-    <div class="main-container">
-        <!-- Controls Panel -->
-        <div class="sidebar">
-            <div class="form-group">
-                <label>Video Title / Overlay Text</label>
-                <input type="text" id="video-text" value="Futuristic Cyber Motion" placeholder="Video ka Text likhein">
-            </div>
+    <!-- Navigation Tabs -->
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('image-tab', this)">
+            <i class="fa-solid fa-image"></i> AI Image
+        </button>
+        <button class="tab-btn" onclick="switchTab('text-tab', this)">
+            <i class="fa-solid fa-pen-nib"></i> AI Writer
+        </button>
+    </div>
 
-            <div class="form-group">
-                <label>Animation Motion Style</label>
-                <select id="motion-style">
-                    <option value="particles">Cyber Cosmic Wormhole</option>
-                    <option value="waves">Neon Wave Motion</option>
-                    <option value="matrix">Matrix Digital Rain</option>
-                </select>
-            </div>
+    <!-- Main Content Area -->
+    <div class="content-area">
 
-            <div class="form-group">
-                <label>Video Color Theme</label>
-                <select id="color-theme">
-                    <option value="cyan">Neon Cyan & Purple</option>
-                    <option value="gold">Gold & Sunset Glow</option>
-                    <option value="green">Matrix Cyber Green</option>
-                </select>
-            </div>
+        <!-- Tab 1: AI Image Generator -->
+        <div id="image-tab" class="tab-content active">
+            <textarea id="img-prompt" placeholder="Write image description (e.g. A futuristic sports car in neon city at night, 8k resolution)..."></textarea>
 
-            <div class="form-group">
-                <label>Duration (Seconds)</label>
-                <select id="duration">
-                    <option value="5">5 Seconds</option>
-                    <option value="8">8 Seconds</option>
-                    <option value="10">10 Seconds</option>
-                </select>
-            </div>
-
-            <button class="btn-render" onclick="startVideoRender()">
-                <i class="fa-solid fa-gear"></i> Render Real Video (MP4/WebM)
+            <button class="btn-primary" onclick="generateImage()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Image
             </button>
-        </div>
 
-        <!-- Video Display Screen -->
-        <div class="workspace">
-            <div class="preview-box">
-                <div id="status" class="status-msg">
-                    <i class="fa-solid fa-clapperboard" style="font-size: 40px; margin-bottom: 10px;"></i><br>
-                    Settings select karke "Render Real Video" par click karein.
+            <div class="output-box">
+                <p id="img-placeholder" style="color: #8b949e;">Your AI photo will appear here</p>
+                <div id="img-loading" class="loading-spinner">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Creating image...
                 </div>
-                <canvas id="render-canvas" width="1280" height="720"></canvas>
-                <video id="output-video" controls></video>
-            </div>
-
-            <div class="controls-bar" id="controls-bar">
-                <button class="btn-download" onclick="downloadVideo()">
-                    <i class="fa-solid fa-download"></i> Download Video File
-                </button>
+                <img id="generated-img" alt="AI Generated Image">
             </div>
         </div>
+
+        <!-- Tab 2: AI Text / Caption / Post Writer -->
+        <div id="text-tab" class="tab-content">
+            <select id="writer-type">
+                <option value="caption">Social Media Caption / Hashtags</option>
+                <option value="email">Professional Email</option>
+                <option value="story">Creative Short Story</option>
+            </select>
+
+            <textarea id="text-prompt" placeholder="Write topic or details (e.g. Write a catchy Instagram caption for traveling to mountains)..."></textarea>
+
+            <button class="btn-primary" onclick="generateText()">
+                <i class="fa-solid fa-paper-plane"></i> Generate Content
+            </button>
+
+            <div class="output-box">
+                <p id="text-placeholder" style="color: #8b949e;">Generated text will appear here</p>
+                <div id="text-loading" class="loading-spinner">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Writing text...
+                </div>
+                <div id="generated-text" class="output-text"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Banner for Monetization (Google AdMob Placeholder) -->
+    <div class="ad-banner">
+        📢 Ad Space (Google AdMob Integration Ready)
     </div>
 
     <script>
-        let canvas = document.getElementById('render-canvas');
-        let ctx = canvas.getContext('2d');
-        let videoElement = document.getElementById('output-video');
-        let statusText = document.getElementById('status');
-        let controlsBar = document.getElementById('controls-bar');
-        
-        let mediaRecorder;
-        let recordedChunks = [];
-        let videoBlobUrl = '';
+        // Tab Switcher Logic
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-        function startVideoRender() {
-            let text = document.getElementById('video-text').value;
-            let style = document.getElementById('motion-style').value;
-            let theme = document.getElementById('color-theme').value;
-            let duration = parseInt(document.getElementById('duration').value);
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
 
-            statusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size:40px;"></i><br>Real Video Frames Render ho rahe hain...';
-            videoElement.style.display = 'none';
-            controlsBar.style.display = 'none';
-            recordedChunks = [];
+        // 1. AI Image Generation Logic (Free API Integration)
+        function generateImage() {
+            const prompt = document.getElementById('img-prompt').value.trim();
+            const imgElement = document.getElementById('generated-img');
+            const placeholder = document.getElementById('img-placeholder');
+            const loading = document.getElementById('img-loading');
 
-            // Setup Canvas Media Stream to Record Real Video
-            let stream = canvas.captureStream(30); // 30 FPS
-            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            if (!prompt) {
+                alert('Please enter an image prompt!');
+                return;
+            }
 
-            mediaRecorder.ondataavailable = function(e) {
-                if (e.data.size > 0) recordedChunks.push(e.data);
+            imgElement.style.display = 'none';
+            placeholder.style.display = 'none';
+            loading.style.display = 'block';
+
+            const encodedPrompt = encodeURIComponent(prompt);
+            const seed = Math.floor(Math.random() * 100000);
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${seed}&nologo=true`;
+
+            imgElement.src = imageUrl;
+
+            imgElement.onload = function() {
+                loading.style.display = 'none';
+                imgElement.style.display = 'block';
             };
 
-            mediaRecorder.onstop = function() {
-                let blob = new Blob(recordedChunks, { type: 'video/webm' });
-                videoBlobUrl = URL.createObjectURL(blob);
-                videoElement.src = videoBlobUrl;
-                videoElement.style.display = 'block';
-                statusText.style.display = 'none';
-                controlsBar.style.display = 'flex';
+            imgElement.onerror = function() {
+                loading.style.display = 'none';
+                placeholder.innerText = '❌ Failed to load image. Try again.';
+                placeholder.style.display = 'block';
             };
+        }
 
-            mediaRecorder.start();
+        // 2. AI Text Writer Logic
+        function generateText() {
+            const prompt = document.getElementById('text-prompt').value.trim();
+            const type = document.getElementById('writer-type').value;
+            const outputText = document.getElementById('generated-text');
+            const placeholder = document.getElementById('text-placeholder');
+            const loading = document.getElementById('text-loading');
 
-            // Render Animation loop for duration
-            let startTime = performance.now();
-            let totalFrames = duration * 30;
-            let currentFrame = 0;
+            if (!prompt) {
+                alert('Please enter topic details!');
+                return;
+            }
 
-            function animate(currentTime) {
-                let elapsedTime = (currentTime - startTime) / 1000;
-                
-                // Draw Canvas Animation
-                drawFrame(style, theme, text, elapsedTime);
+            outputText.innerText = '';
+            placeholder.style.display = 'none';
+            loading.style.display = 'block';
 
-                currentFrame++;
-                if (elapsedTime < duration) {
-                    requestAnimationFrame(animate);
+            // Auto Template Engine logic
+            setTimeout(() => {
+                loading.style.display = 'none';
+
+                let result = '';
+                if (type === 'caption') {
+                    result = `✨ ${prompt.toUpperCase()} ✨\n\nLiving the best moments and capturing memories! 🌟\n\n#${prompt.replace(/\s+/g, '')} #Trending #Viral #LifeStyle #Motivation #AIGenerated`;
+                } else if (type === 'email') {
+                    result = `Subject: Regarding ${prompt}\n\nDear Team,\n\nI hope this email finds you well.\n\nI am writing to discuss ${prompt}. Please review the details and let me know your thoughts.\n\nBest regards,\n[Your Name]`;
                 } else {
-                    mediaRecorder.stop();
+                    result = `Once upon a time, in a world full of wonder, the journey of ${prompt} began. Every step brought a new excitement and adventure that changed everything forever...`;
                 }
-            }
 
-            requestAnimationFrame(animate);
-        }
-
-        function drawFrame(style, theme, text, time) {
-            ctx.fillStyle = '#05070a';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Set Palette
-            let primaryColor = '#00f0ff';
-            let secondaryColor = '#7000ff';
-
-            if (theme === 'gold') {
-                primaryColor = '#ffb703';
-                secondaryColor = '#fb8500';
-            } else if (theme === 'green') {
-                primaryColor = '#00ff66';
-                secondaryColor = '#003311';
-            }
-
-            // Motion Style 1: Particles Wormhole
-            if (style === 'particles') {
-                for (let i = 0; i < 150; i++) {
-                    let angle = i * 0.1 + time * 2;
-                    let radius = (i * 4 + time * 100) % 500;
-                    let x = canvas.width / 2 + Math.cos(angle) * radius;
-                    let y = canvas.height / 2 + Math.sin(angle) * radius;
-
-                    ctx.beginPath();
-                    ctx.arc(x, y, (radius / 50) + 1, 0, Math.PI * 2);
-                    ctx.fillStyle = i % 2 === 0 ? primaryColor : secondaryColor;
-                    ctx.fill();
-                }
-            } 
-            // Motion Style 2: Neon Waves
-            else if (style === 'waves') {
-                ctx.beginPath();
-                ctx.moveTo(0, canvas.height / 2);
-                for (let x = 0; x < canvas.width; x += 10) {
-                    let y = canvas.height / 2 + Math.sin(x * 0.01 + time * 3) * 80 + Math.cos(time * 2) * 40;
-                    ctx.lineTo(x, y);
-                }
-                ctx.strokeStyle = primaryColor;
-                ctx.lineWidth = 6;
-                ctx.stroke();
-            }
-
-            // Text Render
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 50px Segoe UI';
-            ctx.textAlign = 'center';
-            ctx.shadowColor = primaryColor;
-            ctx.shadowBlur = 20;
-            ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 15);
-            ctx.shadowBlur = 0;
-        }
-
-        function downloadVideo() {
-            if (!videoBlobUrl) return;
-            let a = document.createElement('a');
-            a.href = videoBlobUrl;
-            a.download = `Generated_Video_${Date.now()}.webm`;
-            a.click();
+                outputText.innerText = result;
+            }, 1200);
         }
     </script>
 </body>
