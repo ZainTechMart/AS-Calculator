@@ -1,35 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Age & Service Calculator</title>
-
-<meta
-  name="description"
-  content="Professional Age, Service and Retirement Calculator"
-/>
+<title>Age & Service Calculator Pro</title>
 
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
+:root{
+  --bg:#070b14;
+  --bg2:#0d1424;
+  --card:rgba(15,23,42,.84);
+  --input:#0b1220;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --border:rgba(148,163,184,.16);
+  --blue:#3b82f6;
+  --cyan:#22d3ee;
+  --purple:#8b5cf6;
+  --green:#22c55e;
+  --orange:#f59e0b;
+  --red:#ef4444;
+  --shadow:0 20px 60px rgba(0,0,0,.35);
+}
 
 *{
+  box-sizing:border-box;
   margin:0;
   padding:0;
-  box-sizing:border-box;
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
 }
 
 html{
@@ -37,1886 +35,2788 @@ html{
 }
 
 body{
-
   min-height:100vh;
-
-  color:#ffffff;
-
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
   background:
-    radial-gradient(
-      circle at 10% 0%,
-      rgba(0,217,255,.18),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(124,58,237,.20),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(16,185,129,.10),
-      transparent 35%
-    ),
-    #050816;
-
+    radial-gradient(circle at 5% 5%,rgba(59,130,246,.20),transparent 30%),
+    radial-gradient(circle at 95% 15%,rgba(34,211,238,.13),transparent 28%),
+    radial-gradient(circle at 50% 100%,rgba(139,92,246,.13),transparent 35%),
+    var(--bg);
+  transition:.3s;
   overflow-x:hidden;
 }
 
+body.light{
+  --bg:#eef4ff;
+  --bg2:#ffffff;
+  --card:rgba(255,255,255,.90);
+  --input:#f6f9ff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:rgba(15,23,42,.12);
+  --shadow:0 20px 50px rgba(15,23,42,.12);
+}
 
-/* =========================================================
-   DECORATIVE BACKGROUND
-========================================================= */
-
-.bg-orb{
+body::before,
+body::after{
+  content:"";
   position:fixed;
+  width:230px;
+  height:230px;
   border-radius:50%;
-  pointer-events:none;
+  filter:blur(75px);
+  opacity:.25;
   z-index:-1;
-  filter:blur(2px);
 }
 
-.orb-one{
-
-  width:220px;
-  height:220px;
-
-  top:-90px;
-  left:-80px;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(0,229,255,.16),
-      transparent 70%
-    );
+body::before{
+  background:#2563eb;
+  left:-100px;
+  top:100px;
 }
 
-.orb-two{
-
-  width:280px;
-  height:280px;
-
-  right:-120px;
-  top:240px;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(139,92,246,.14),
-      transparent 70%
-    );
+body::after{
+  background:#06b6d4;
+  right:-100px;
+  bottom:80px;
 }
 
-.orb-three{
-
-  width:250px;
-  height:250px;
-
-  left:-110px;
-  bottom:-100px;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(16,185,129,.12),
-      transparent 70%
-    );
+.container{
+  width:min(1120px,94%);
+  margin:auto;
 }
 
+header{
+  padding:18px 0;
+}
 
-/* =========================================================
-   HEADER
-========================================================= */
+.header-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
 
-.header{
-
-  text-align:center;
-
-  padding:
-    28px
-    16px
-    18px;
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
 .logo{
-
-  width:78px;
-  height:78px;
-
-  margin:auto;
-
+  width:48px;
+  height:48px;
+  border-radius:15px;
   display:flex;
   align-items:center;
   justify-content:center;
-
-  border-radius:25px;
-
-  font-size:36px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #00d9ff,
-      #536dfe,
-      #9c4dff
-    );
-
-  box-shadow:
-    0 18px 50px rgba(0,200,255,.25);
-
-  border:
-    1px solid rgba(255,255,255,.16);
+  font-size:25px;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  box-shadow:0 12px 35px rgba(34,211,238,.2);
 }
 
-.header h1{
-
-  margin-top:16px;
-
-  font-size:
-    clamp(23px,6vw,34px);
-
-  font-weight:900;
-
-  letter-spacing:-.5px;
+.brand h1{
+  font-size:20px;
 }
 
-.header p{
+.brand p{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
+}
 
-  margin-top:8px;
+.top-actions{
+  display:flex;
+  gap:8px;
+}
 
-  color:#9eabc8;
+.icon-btn,
+.small-btn{
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  padding:10px 13px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+}
 
+.hero{
+  text-align:center;
+  padding:20px 0 28px;
+}
+
+.hero h2{
+  font-size:clamp(28px,6vw,48px);
+  line-height:1.1;
+  margin-bottom:12px;
+  background:linear-gradient(90deg,var(--text),var(--cyan));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  max-width:680px;
+  margin:auto;
+  color:var(--muted);
+  line-height:1.6;
   font-size:14px;
 }
 
-
-/* =========================================================
-   CONTAINER
-========================================================= */
-
-.container{
-
-  width:min(760px,94%);
-
-  margin:
-    0 auto
-    40px;
-}
-
-
-/* =========================================================
-   CARD
-========================================================= */
-
 .card{
-
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:21px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(20px);
   margin-bottom:18px;
-
-  padding:22px;
-
-  border-radius:28px;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(20,30,58,.88),
-      rgba(8,14,31,.86)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.08);
-
-  box-shadow:
-    0 25px 70px rgba(0,0,0,.35),
-    inset 0 1px rgba(255,255,255,.04);
-
-  backdrop-filter:blur(18px);
 }
 
-
-/* =========================================================
-   SECTION TITLE
-========================================================= */
-
-.section-title{
-
+.card-title{
   display:flex;
-
   align-items:center;
-
-  gap:12px;
-
-  margin-bottom:20px;
-
+  gap:10px;
   font-size:18px;
-
   font-weight:800;
+  margin-bottom:18px;
 }
 
-.section-icon{
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
 
-  width:42px;
-  height:42px;
-
+.field{
   display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  border-radius:14px;
-
-  font-size:20px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #00c6ff,
-      #675cff
-    );
-
-  box-shadow:
-    0 10px 25px rgba(0,180,255,.16);
+  flex-direction:column;
+  gap:7px;
 }
 
-
-/* =========================================================
-   INPUTS
-========================================================= */
-
-.input-group{
-
-  margin-bottom:16px;
-}
-
-label{
-
-  display:block;
-
-  margin-bottom:8px;
-
-  color:#b7c2dc;
-
+.field label{
+  color:var(--muted);
   font-size:13px;
-
   font-weight:700;
 }
 
 input,
 select{
-
   width:100%;
-
-  padding:15px 16px;
-
-  border-radius:15px;
-
-  outline:none;
-
-  border:
-    1px solid #253454;
-
-  background:#080f22;
-
-  color:#ffffff;
-
+  border:1px solid var(--border);
+  background:var(--input);
+  color:var(--text);
+  border-radius:13px;
+  padding:14px;
   font-size:15px;
-
-  transition:.2s;
+  outline:none;
 }
 
 input:focus,
 select:focus{
-
-  border-color:#00d9ff;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(0,217,255,.10);
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(59,130,246,.12);
 }
 
-
-/* =========================================================
-   RETIREMENT AGE ROW
-========================================================= */
-
-.age-row{
-
-  display:grid;
-
-  grid-template-columns:1fr 1fr;
-
-  gap:12px;
-}
-
-
-/* =========================================================
-   CALCULATE BUTTON
-========================================================= */
-
-.calculate{
-
+.primary-btn{
   width:100%;
-
-  margin-top:5px;
-
-  padding:17px;
-
   border:0;
-
-  border-radius:17px;
-
-  color:white;
-
+  margin-top:18px;
+  padding:16px;
+  border-radius:14px;
+  color:#fff;
+  background:linear-gradient(135deg,#2563eb,#06b6d4);
   font-size:16px;
-
   font-weight:900;
-
   cursor:pointer;
-
-  background:
-    linear-gradient(
-      135deg,
-      #00c6ff,
-      #536dfe,
-      #9b4dff
-    );
-
-  box-shadow:
-    0 15px 35px
-    rgba(72,92,255,.25);
-
-  transition:.2s;
 }
 
-.calculate:hover{
-
-  transform:translateY(-1px);
-}
-
-.calculate:active{
-
-  transform:scale(.98);
-}
-
-
-/* =========================================================
-   RESULTS
-========================================================= */
-
-.results{
-
+.dashboard{
   display:none;
 }
 
-
-/* =========================================================
-   MAIN RESULT
-========================================================= */
-
-.main-result{
-
-  text-align:center;
-
-  padding:22px 12px;
-
-  border-radius:22px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0,217,255,.10),
-      rgba(139,92,246,.10)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.08);
-
-  margin-bottom:15px;
+.dashboard.show{
+  display:block;
+  animation:up .45s ease;
 }
 
-.main-result small{
+@keyframes up{
+  from{
+    opacity:0;
+    transform:translateY(15px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 
-  color:#94a3c2;
+.profile-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
 
+.profile-name{
+  font-size:18px;
+  font-weight:900;
+}
+
+.status-pill{
+  padding:7px 11px;
+  border-radius:30px;
+  background:rgba(34,197,94,.10);
+  color:var(--green);
   font-size:12px;
-
-  font-weight:700;
+  font-weight:800;
 }
 
-.big-result{
-
-  margin-top:9px;
-
-  font-size:
-    clamp(23px,7vw,32px);
-
-  font-weight:950;
-
-  background:
-    linear-gradient(
-      90deg,
-      #00e5ff,
-      #ffffff,
-      #a78bfa
-    );
-
-  -webkit-background-clip:text;
-
-  background-clip:text;
-
-  color:transparent;
-}
-
-
-/* =========================================================
-   STAT GRID
-========================================================= */
-
-.grid{
-
+.summary-grid{
   display:grid;
-
-  grid-template-columns:
-    repeat(2,1fr);
-
+  grid-template-columns:repeat(4,1fr);
   gap:12px;
 }
 
-.stat{
-
-  min-height:120px;
-
-  padding:16px;
-
-  border-radius:19px;
-
-  background:#080f22;
-
-  border:
-    1px solid #202e4d;
-}
-
-.stat-icon{
-
-  font-size:22px;
-}
-
-.stat span{
-
-  display:block;
-
-  margin-top:9px;
-
-  color:#8491b2;
-
-  font-size:11px;
-
-  font-weight:700;
-}
-
-.stat strong{
-
-  display:block;
-
-  margin-top:5px;
-
-  color:#f4f7ff;
-
-  font-size:17px;
-
-  line-height:1.35;
-}
-
-
-/* =========================================================
-   RETIREMENT BOX
-========================================================= */
-
-.retirement-box{
-
-  margin-top:15px;
-
-  padding:20px;
-
-  border-radius:22px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(16,185,129,.08),
-      rgba(0,217,255,.06)
-    );
-
-  border:
-    1px solid rgba(16,185,129,.14);
-}
-
-.retirement-title{
-
+.summary{
+  min-height:140px;
   display:flex;
-
-  justify-content:space-between;
-
+  flex-direction:column;
+  justify-content:center;
   align-items:center;
-
-  gap:10px;
-
-  margin-bottom:12px;
-
-  color:#b9c5df;
-
-  font-size:13px;
-
-  font-weight:700;
+  text-align:center;
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:15px;
 }
 
-.retirement-date{
-
-  font-size:24px;
-
-  font-weight:900;
-
-  color:#ffffff;
-}
-
-.remaining{
-
-  margin-top:8px;
-
-  color:#7dd3fc;
-
-  font-size:14px;
-}
-
-
-/* =========================================================
-   PROGRESS BAR
-========================================================= */
-
-.progress-area{
-
-  margin-top:18px;
-}
-
-.progress-label{
-
-  display:flex;
-
-  justify-content:space-between;
-
-  color:#8794b4;
-
-  font-size:12px;
-
+.summary-icon{
+  font-size:25px;
   margin-bottom:8px;
 }
 
+.summary-label{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:7px;
+}
+
+.summary-value{
+  font-size:22px;
+  font-weight:900;
+}
+
+.summary-small{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px;
+}
+
+.countdown-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:13px;
+}
+
+.count-card{
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:18px;
+  text-align:center;
+}
+
+.count-icon{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.count-title{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:9px;
+}
+
+.count-value{
+  font-size:17px;
+  font-weight:900;
+  line-height:1.5;
+}
+
+.count-date{
+  color:var(--cyan);
+  font-size:12px;
+  margin-top:6px;
+}
+
+.progress-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+
+.progress-card{
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:18px;
+}
+
+.progress-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.progress-head strong{
+  font-size:14px;
+}
+
+.progress-head span{
+  color:var(--cyan);
+  font-weight:900;
+}
+
 .progress{
-
-  width:100%;
-
-  height:12px;
-
-  overflow:hidden;
-
+  height:11px;
+  background:rgba(148,163,184,.15);
   border-radius:20px;
-
-  background:#101a31;
+  overflow:hidden;
 }
 
 .progress-fill{
-
-  width:0%;
-
+  width:0;
   height:100%;
-
   border-radius:20px;
-
-  background:
-    linear-gradient(
-      90deg,
-      #00d9ff,
-      #536dfe,
-      #a855f7
-    );
-
-  transition:
-    width 1s ease;
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+  transition:width .7s;
 }
 
+.progress-fill.purple{
+  background:linear-gradient(90deg,var(--purple),#ec4899);
+}
 
-/* =========================================================
-   INFO
-========================================================= */
+.progress-date{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:9px;
+}
 
-.info{
+.milestones{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:11px;
+}
 
-  margin-top:15px;
+.milestone{
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:15px;
+}
 
-  padding:16px;
+.milestone.completed{
+  border-color:rgba(34,197,94,.35);
+  background:rgba(34,197,94,.06);
+}
 
-  border-radius:18px;
+.milestone-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:5px;
+  margin-bottom:8px;
+}
 
-  background:
-    rgba(0,217,255,.045);
+.milestone-years{
+  font-size:16px;
+  font-weight:900;
+}
 
-  border:
-    1px solid rgba(0,217,255,.10);
+.milestone-status{
+  color:var(--green);
+  font-size:11px;
+  font-weight:800;
+}
 
-  color:#aebbd7;
-
+.milestone-date{
   font-size:13px;
-
-  line-height:1.65;
+  font-weight:700;
 }
 
+.milestone-left{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px;
+  line-height:1.4;
+}
 
-/* =========================================================
-   RESET BUTTON
-========================================================= */
+.timeline{
+  position:relative;
+  padding-left:25px;
+}
 
-.reset{
+.urdu .timeline{
+  padding-left:0;
+  padding-right:25px;
+}
 
-  width:100%;
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:7px;
+  top:4px;
+  bottom:4px;
+  width:2px;
+  background:linear-gradient(var(--blue),var(--cyan),var(--purple));
+}
 
-  margin-top:13px;
+.urdu .timeline::before{
+  left:auto;
+  right:7px;
+}
 
-  padding:13px;
+.timeline-item{
+  position:relative;
+  margin-bottom:18px;
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:14px;
+}
 
-  border-radius:14px;
+.timeline-item::before{
+  content:"";
+  position:absolute;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--cyan);
+  left:-23px;
+  top:19px;
+  box-shadow:0 0 0 5px rgba(34,211,238,.10);
+}
 
-  border:
-    1px solid #293653;
+.urdu .timeline-item::before{
+  left:auto;
+  right:-23px;
+}
 
-  background:transparent;
-
-  color:#aab6d0;
-
+.timeline-title{
+  font-weight:900;
   font-size:14px;
+}
 
-  font-weight:700;
+.timeline-date{
+  color:var(--cyan);
+  font-size:12px;
+  margin-top:5px;
+}
 
+.timeline-description{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+
+.action-btn{
+  border:1px solid var(--border);
+  background:var(--input);
+  color:var(--text);
+  padding:13px 8px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.action-btn:hover{
+  border-color:var(--blue);
+}
+
+.danger{
+  color:var(--red);
+  border-color:rgba(239,68,68,.25);
+}
+
+.note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+  padding:14px;
+  border-radius:12px;
+  background:rgba(59,130,246,.06);
+  border:1px solid var(--border);
+}
+
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  padding:20px 0 35px;
+}
+
+.urdu{
+  direction:rtl;
+}
+
+.urdu .header-inner,
+.urdu .profile-bar,
+.urdu .progress-head{
+  direction:rtl;
+}
+
+.profile-list{
+  display:none;
+  margin-top:15px;
+}
+
+.profile-list.show{
+  display:block;
+}
+
+.profile-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:11px;
+  margin-bottom:8px;
+}
+
+.profile-row-name{
+  font-weight:800;
+}
+
+.profile-row-actions{
+  display:flex;
+  gap:5px;
+}
+
+.profile-row-actions button{
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  padding:7px 9px;
+  border-radius:8px;
   cursor:pointer;
 }
 
+@media(max-width:850px){
+  .summary-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-
-  padding:
-    0
-    20px
-    30px;
-
-  text-align:center;
-
-  color:#687593;
-
-  font-size:12px;
+  .milestones{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
+@media(max-width:650px){
 
-/* =========================================================
-   MOBILE
-========================================================= */
+  .container{
+    width:94%;
+  }
 
-@media(max-width:520px){
+  .brand h1{
+    font-size:17px;
+  }
 
-  .header{
-    padding-top:23px;
+  .brand p{
+    display:none;
   }
 
   .logo{
+    width:43px;
+    height:43px;
+  }
 
-    width:68px;
-    height:68px;
+  .icon-btn{
+    padding:9px 10px;
+    font-size:12px;
+  }
 
-    border-radius:21px;
+  .hero{
+    padding:15px 0 22px;
+  }
 
-    font-size:31px;
+  .hero h2{
+    font-size:30px;
+  }
+
+  .hero p{
+    font-size:13px;
   }
 
   .card{
-
-    padding:18px;
-
-    border-radius:23px;
+    padding:16px;
+    border-radius:18px;
   }
 
-  .grid{
-
-    gap:9px;
+  .form-grid,
+  .countdown-grid,
+  .progress-grid{
+    grid-template-columns:1fr;
   }
 
-  .stat{
-
-    min-height:112px;
-
-    padding:14px;
+  .summary-grid{
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .stat strong{
-
-    font-size:15px;
+  .milestones{
+    grid-template-columns:1fr;
   }
 
-  .retirement-date{
+  .actions{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-    font-size:21px;
+  .profile-bar{
+    align-items:flex-start;
+  }
+
+  .profile-name{
+    font-size:16px;
   }
 }
 
+@media(max-width:380px){
+
+  .summary-grid{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    grid-template-columns:1fr;
+  }
+
+  .hero h2{
+    font-size:27px;
+  }
+}
+
+
+/* PRINT / PDF */
+
+@media print{
+
+  body{
+    background:#fff!important;
+    color:#000!important;
+  }
+
+  body::before,
+  body::after{
+    display:none;
+  }
+
+  .no-print,
+  header .top-actions,
+  .input-section,
+  footer{
+    display:none!important;
+  }
+
+  .dashboard{
+    display:block!important;
+  }
+
+  .card,
+  .summary,
+  .count-card,
+  .progress-card,
+  .milestone,
+  .timeline-item{
+    background:#fff!important;
+    color:#000!important;
+    box-shadow:none!important;
+    border:1px solid #ddd!important;
+    break-inside:avoid;
+  }
+
+  .summary-label,
+  .summary-small,
+  .count-title,
+  .milestone-left,
+  .timeline-description{
+    color:#444!important;
+  }
+
+  .progress{
+    background:#ddd!important;
+  }
+
+  .progress-fill{
+    print-color-adjust:exact;
+    -webkit-print-color-adjust:exact;
+  }
+}
 </style>
 </head>
 
-
 <body>
 
-<!-- Decorative Background -->
-<div class="bg-orb orb-one"></div>
-<div class="bg-orb orb-two"></div>
-<div class="bg-orb orb-three"></div>
+<header>
+<div class="container">
 
+<div class="header-inner">
 
-<!-- =======================================================
-     HEADER
-======================================================= -->
+<div class="brand">
 
-<header class="header">
+<div class="logo">⏳</div>
 
-  <div class="logo">
-    ⏳
-  </div>
+<div>
+<h1 data-i18n="appName">Age & Service Calculator Pro</h1>
+<p data-i18n="tagline">Personal Age • Service • Retirement Dashboard</p>
+</div>
 
-  <h1>
-    Age & Service Calculator
-  </h1>
+</div>
 
-  <p>
-    Age • Service • Retirement • Progress
-  </p>
+<div class="top-actions no-print">
 
+<button class="icon-btn" id="languageBtn" onclick="toggleLanguage()">
+اردو
+</button>
+
+<button class="icon-btn" id="themeBtn" onclick="toggleTheme()">
+☀️
+</button>
+
+</div>
+
+</div>
+
+</div>
 </header>
 
 
 <main class="container">
 
+<section class="hero">
 
-<!-- =======================================================
-     INPUT CARD
-======================================================= -->
+<h2 data-i18n="heroTitle">
+Your Complete Life & Service Dashboard
+</h2>
 
-<section class="card">
-
-  <div class="section-title">
-
-    <div class="section-icon">
-      📋
-    </div>
-
-    <div>
-      Enter Your Details
-    </div>
-
-  </div>
-
-
-  <!-- DOB -->
-
-  <div class="input-group">
-
-    <label for="dob">
-      🎂 Date of Birth
-    </label>
-
-    <input
-      type="date"
-      id="dob"
-    >
-
-  </div>
-
-
-  <!-- Joining Date -->
-
-  <div class="input-group">
-
-    <label for="joining">
-      💼 Joining / Service Start Date
-    </label>
-
-    <input
-      type="date"
-      id="joining"
-    >
-
-  </div>
-
-
-  <!-- Calculate Date -->
-
-  <div class="input-group">
-
-    <label for="currentDate">
-      📅 Calculate Up To
-    </label>
-
-    <input
-      type="date"
-      id="currentDate"
-    >
-
-  </div>
-
-
-  <!-- Retirement Age -->
-
-  <div class="age-row">
-
-    <div class="input-group">
-
-      <label for="retirementAge">
-        🏁 Retirement Age
-      </label>
-
-      <select id="retirementAge">
-
-        <option value="55">
-          55 Years
-        </option>
-
-        <option value="56">
-          56 Years
-        </option>
-
-        <option value="57">
-          57 Years
-        </option>
-
-        <option value="58">
-          58 Years
-        </option>
-
-        <option value="59">
-          59 Years
-        </option>
-
-        <option value="60" selected>
-          60 Years
-        </option>
-
-        <option value="61">
-          61 Years
-        </option>
-
-        <option value="62">
-          62 Years
-        </option>
-
-        <option value="63">
-          63 Years
-        </option>
-
-        <option value="64">
-          64 Years
-        </option>
-
-        <option value="65">
-          65 Years
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div class="input-group">
-
-      <label for="serviceTarget">
-        🎯 Target Service
-      </label>
-
-      <select id="serviceTarget">
-
-        <option value="20">
-          20 Years
-        </option>
-
-        <option value="25">
-          25 Years
-        </option>
-
-        <option value="30" selected>
-          30 Years
-        </option>
-
-        <option value="35">
-          35 Years
-        </option>
-
-        <option value="40">
-          40 Years
-        </option>
-
-      </select>
-
-    </div>
-
-  </div>
-
-
-  <button
-    class="calculate"
-    onclick="calculateAll()"
-  >
-    ✨ Calculate Everything
-  </button>
+<p data-i18n="heroText">
+Calculate age, service, retirement, milestones,
+countdowns and career progress in one professional dashboard.
+</p>
 
 </section>
 
 
+<!-- INPUT -->
 
-<!-- =======================================================
-     RESULTS
-======================================================= -->
+<section class="card input-section">
 
-<section
-  class="card results"
-  id="results"
+<div class="card-title">
+<span>📋</span>
+<span data-i18n="details">
+Enter Your Details
+</span>
+</div>
+
+
+<div class="form-grid">
+
+<div class="field">
+<label data-i18n="dob">Date of Birth</label>
+<input type="date" id="dob">
+</div>
+
+
+<div class="field">
+<label data-i18n="joining">Joining / Service Start</label>
+<input type="date" id="joining">
+</div>
+
+
+<div class="field">
+<label data-i18n="calculateUpTo">Calculate Up To</label>
+<input type="date" id="currentDate">
+</div>
+
+
+<div class="field">
+<label data-i18n="retirementAge">Retirement Age</label>
+<select id="retirementAge"></select>
+</div>
+
+
+<div class="field">
+<label data-i18n="targetService">Target Service</label>
+<select id="serviceTarget"></select>
+</div>
+
+
+<div class="field">
+
+<label data-i18n="profileName">
+Profile Name
+</label>
+
+<input
+type="text"
+id="profileName"
+placeholder="My Profile"
 >
 
-  <div class="section-title">
+</div>
 
-    <div class="section-icon">
-      📊
-    </div>
+</div>
 
-    <div>
-      Calculation Results
-    </div>
 
-  </div>
+<button class="primary-btn" onclick="calculate()">
+🧮 <span data-i18n="calculate">Calculate Everything</span>
+</button>
 
 
-  <!-- AGE -->
+<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:9px">
 
-  <div class="main-result">
+<button class="small-btn" onclick="saveProfile()">
+💾 <span data-i18n="saveProfile">Save Profile</span>
+</button>
 
-    <small>
-      CURRENT AGE
-    </small>
+<button class="small-btn" onclick="toggleProfiles()">
+👤 <span data-i18n="profiles">Profiles</span>
+</button>
 
-    <div
-      class="big-result"
-      id="ageResult"
-    >
-      -
-    </div>
+</div>
 
-  </div>
 
+<div class="profile-list" id="profileList"></div>
 
-  <!-- SERVICE -->
+</section>
 
-  <div class="main-result">
 
-    <small>
-      COMPLETED SERVICE
-    </small>
+<!-- DASHBOARD -->
 
-    <div
-      class="big-result"
-      id="serviceResult"
-    >
-      -
-    </div>
+<section class="dashboard" id="dashboard">
 
-  </div>
 
+<!-- PROFILE -->
 
-  <!-- STATISTICS -->
+<div class="card">
 
-  <div class="grid">
+<div class="profile-bar">
 
+<div>
 
-    <div class="stat">
+<div class="profile-name" id="dashboardProfile">
+My Profile
+</div>
 
-      <div class="stat-icon">
-        🎂
-      </div>
+<div style="color:var(--muted);font-size:11px;margin-top:4px">
+<span data-i18n="updated">Dashboard updated</span>
+</div>
 
-      <span>
-        Next Birthday
-      </span>
+</div>
 
-      <strong id="birthdayResult">
-        -
-      </strong>
+<div class="status-pill">
+● <span data-i18n="active">Active</span>
+</div>
 
-    </div>
+</div>
 
 
-    <div class="stat">
+<div class="summary-grid">
 
-      <div class="stat-icon">
-        📆
-      </div>
 
-      <span>
-        Days Lived
-      </span>
+<div class="summary">
 
-      <strong id="daysLived">
-        -
-      </strong>
+<div class="summary-icon">🎂</div>
 
-    </div>
+<div class="summary-label" data-i18n="age">
+Current Age
+</div>
 
+<div class="summary-value" id="ageResult">
+—
+</div>
 
-    <div class="stat">
+<div class="summary-small" id="ageExtra">
+—
+</div>
 
-      <div class="stat-icon">
-        💼
-      </div>
+</div>
 
-      <span>
-        Service Days
-      </span>
 
-      <strong id="serviceDays">
-        -
-      </strong>
+<div class="summary">
 
-    </div>
+<div class="summary-icon">💼</div>
 
+<div class="summary-label" data-i18n="service">
+Completed Service
+</div>
 
-    <div class="stat">
+<div class="summary-value" id="serviceResult">
+—
+</div>
 
-      <div class="stat-icon">
-        📈
-      </div>
+<div class="summary-small" id="serviceExtra">
+—
+</div>
 
-      <span>
-        Age in Years
-      </span>
+</div>
 
-      <strong id="ageDecimal">
-        -
-      </strong>
 
-    </div>
+<div class="summary">
 
-  </div>
+<div class="summary-icon">📅</div>
 
+<div class="summary-label" data-i18n="daysLived">
+Days Lived
+</div>
 
-  <!-- =====================================================
-       RETIREMENT
-  ====================================================== -->
+<div class="summary-value" id="daysLived">
+—
+</div>
 
-  <div class="retirement-box">
+<div class="summary-small" data-i18n="totalDays">
+Total days
+</div>
 
-    <div class="retirement-title">
+</div>
 
-      <span>
-        🏁 Estimated Retirement
-      </span>
 
-      <span id="retirementAgeText">
-        60 Years
-      </span>
+<div class="summary">
 
-    </div>
+<div class="summary-icon">🎯</div>
 
+<div class="summary-label" data-i18n="target">
+Service Target
+</div>
 
-    <div
-      class="retirement-date"
-      id="retirementDate"
-    >
-      -
-    </div>
+<div class="summary-value" id="targetResult">
+—
+</div>
 
+<div class="summary-small" id="targetExtra">
+—
+</div>
 
-    <div
-      class="remaining"
-      id="remainingTime"
-    >
-      -
-    </div>
+</div>
 
 
-    <div class="progress-area">
+</div>
 
-      <div class="progress-label">
+</div>
 
-        <span>
-          Retirement Progress
-        </span>
 
-        <span id="progressPercent">
-          0%
-        </span>
+<!-- LIVE COUNTDOWNS -->
 
-      </div>
+<div class="card">
 
-      <div class="progress">
+<div class="card-title">
+<span>⏱️</span>
+<span data-i18n="liveCountdowns">
+Live Countdowns
+</span>
+</div>
 
-        <div
-          class="progress-fill"
-          id="progressFill"
-        ></div>
 
-      </div>
+<div class="countdown-grid">
 
-    </div>
 
-  </div>
+<div class="count-card">
 
+<div class="count-icon">🎂</div>
 
-  <!-- SERVICE TARGET -->
+<div class="count-title" data-i18n="nextBirthday">
+Next Birthday
+</div>
 
-  <div class="retirement-box">
+<div class="count-value" id="birthdayCountdown">
+—
+</div>
 
-    <div class="retirement-title">
+<div class="count-date" id="birthdayDate">
+—
+</div>
 
-      <span>
-        🎯 Service Target
-      </span>
+</div>
 
-      <span id="targetText">
-        30 Years
-      </span>
 
-    </div>
+<div class="count-card">
 
-    <div
-      class="retirement-date"
-      id="serviceTargetDate"
-    >
-      -
-    </div>
+<div class="count-icon">🏁</div>
 
-    <div
-      class="remaining"
-      id="serviceRemaining"
-    >
-      -
-    </div>
+<div class="count-title" data-i18n="retirement">
+Retirement
+</div>
 
-  </div>
+<div class="count-value" id="retirementCountdown">
+—
+</div>
 
+<div class="count-date" id="retirementDate">
+—
+</div>
 
-  <!-- INFO -->
+</div>
 
-  <div
-    class="info"
-    id="extraInfo"
-  >
-    Your detailed calculation will appear here.
-  </div>
 
+<div class="count-card">
 
-  <button
-    class="reset"
-    onclick="resetCalculator()"
-  >
-    ↻ Reset Calculator
-  </button>
+<div class="count-icon">🎯</div>
+
+<div class="count-title" data-i18n="serviceGoal">
+Service Goal
+</div>
+
+<div class="count-value" id="serviceCountdown">
+—
+</div>
+
+<div class="count-date" id="serviceTargetDate">
+—
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- PROGRESS -->
+
+<div class="card">
+
+<div class="card-title">
+<span>📈</span>
+<span data-i18n="progress">
+Progress
+</span>
+</div>
+
+
+<div class="progress-grid">
+
+
+<div class="progress-card">
+
+<div class="progress-head">
+
+<strong data-i18n="retirementProgress">
+Retirement Progress
+</strong>
+
+<span id="retirementPercent">
+0%
+</span>
+
+</div>
+
+<div class="progress">
+<div
+class="progress-fill"
+id="retirementFill">
+</div>
+</div>
+
+<div class="progress-date" id="retirementInfo">
+—
+</div>
+
+</div>
+
+
+<div class="progress-card">
+
+<div class="progress-head">
+
+<strong data-i18n="serviceProgress">
+Service Progress
+</strong>
+
+<span id="servicePercent">
+0%
+</span>
+
+</div>
+
+<div class="progress">
+<div
+class="progress-fill purple"
+id="serviceFill">
+</div>
+</div>
+
+<div class="progress-date" id="serviceInfo">
+—
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- MILESTONES -->
+
+<div class="card">
+
+<div class="card-title">
+<span>🏆</span>
+<span data-i18n="milestones">
+Service Milestones
+</span>
+</div>
+
+<div class="milestones" id="milestones"></div>
+
+</div>
+
+
+<!-- TIMELINE -->
+
+<div class="card">
+
+<div class="card-title">
+<span>🗓️</span>
+<span data-i18n="careerTimeline">
+Career Timeline
+</span>
+</div>
+
+<div class="timeline" id="timeline"></div>
+
+</div>
+
+
+<!-- EXTRA INFO -->
+
+<div class="card">
+
+<div class="card-title">
+<span>ℹ️</span>
+<span data-i18n="importantInfo">
+Important Information
+</span>
+</div>
+
+<div class="note">
+
+<strong data-i18n="noteTitle">
+Note:
+</strong>
+
+<span data-i18n="note">
+Retirement calculations are estimates based on the
+age selected by you. Actual retirement rules may vary
+according to employer, department or applicable law.
+</span>
+
+</div>
+
+</div>
+
+
+<!-- ACTIONS -->
+
+<div class="card no-print">
+
+<div class="card-title">
+<span>⚡</span>
+<span data-i18n="actions">
+Actions
+</span>
+</div>
+
+
+<div class="actions">
+
+<button class="action-btn" onclick="copyReport()">
+📋 <span data-i18n="copy">Copy</span>
+</button>
+
+<button class="action-btn" onclick="shareReport()">
+📤 <span data-i18n="share">Share</span>
+</button>
+
+<button class="action-btn" onclick="whatsappReport()">
+💬 WhatsApp
+</button>
+
+<button class="action-btn" onclick="printReport()">
+🖨️ <span data-i18n="pdf">Print / PDF</span>
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card no-print">
+
+<button
+class="action-btn danger"
+style="width:100%"
+onclick="resetAll()"
+>
+🔄 <span data-i18n="reset">
+Reset Calculator
+</span>
+</button>
+
+</div>
+
 
 </section>
 
 </main>
 
 
-<footer class="footer">
-
-  Age & Service Calculator
-
-  <br>
-
-  Simple • Fast • Mobile Friendly
-
+<footer>
+© 2026 Age & Service Calculator Pro
 </footer>
-
 
 
 <script>
 
-/* =========================================================
-   DATE HELPERS
-========================================================= */
+/* =========================================
+   TRANSLATIONS
+========================================= */
+
+const T={
+
+en:{
+
+appName:"Age & Service Calculator Pro",
+tagline:"Personal Age • Service • Retirement Dashboard",
+
+heroTitle:"Your Complete Life & Service Dashboard",
+
+heroText:
+"Calculate age, service, retirement, milestones, countdowns and career progress in one professional dashboard.",
+
+details:"Enter Your Details",
+
+dob:"Date of Birth",
+joining:"Joining / Service Start",
+calculateUpTo:"Calculate Up To",
+retirementAge:"Retirement Age",
+targetService:"Target Service",
+profileName:"Profile Name",
+
+calculate:"Calculate Everything",
+saveProfile:"Save Profile",
+profiles:"Profiles",
+
+updated:"Dashboard updated",
+active:"Active",
+
+age:"Current Age",
+service:"Completed Service",
+daysLived:"Days Lived",
+totalDays:"Total days",
+target:"Service Target",
+
+liveCountdowns:"Live Countdowns",
+nextBirthday:"Next Birthday",
+retirement:"Retirement",
+serviceGoal:"Service Goal",
+
+progress:"Progress",
+retirementProgress:"Retirement Progress",
+serviceProgress:"Service Progress",
+
+milestones:"Service Milestones",
+careerTimeline:"Career Timeline",
+
+importantInfo:"Important Information",
+
+noteTitle:"Note:",
+note:
+"Retirement calculations are estimates based on the age selected by you. Actual retirement rules may vary according to employer, department or applicable law.",
+
+actions:"Actions",
+copy:"Copy",
+share:"Share",
+pdf:"Print / PDF",
+reset:"Reset Calculator",
+
+years:"Years",
+months:"Months",
+days:"Days",
+year:"Year",
+
+completed:"Completed",
+remaining:"remaining",
+today:"Today 🎉",
+reached:"Reached",
+
+joined:"Joined",
+birthday:"Birthday",
+serviceMilestone:"Service milestone",
+retirementMilestone:"Retirement",
+
+saved:"Profile saved!",
+copied:"Report copied!",
+deleted:"Profile deleted!",
+loaded:"Profile loaded!",
+
+invalid:"Please enter all required dates.",
+joiningError:"Joining date cannot be before date of birth.",
+currentError:"Calculate Up To date cannot be before date of birth.",
+futureJoining:"Joining date cannot be after Calculate Up To date."
+},
+
+ur:{
+
+appName:"عمر اور سروس کیلکولیٹر پرو",
+tagline:"ذاتی عمر • سروس • ریٹائرمنٹ ڈیش بورڈ",
+
+heroTitle:"آپ کا مکمل عمر اور سروس ڈیش بورڈ",
+
+heroText:
+"عمر، سروس، ریٹائرمنٹ، سنگِ میل، کاؤنٹ ڈاؤن اور کیریئر پروگریس ایک ہی جگہ دیکھیں۔",
+
+details:"اپنی معلومات درج کریں",
+
+dob:"تاریخ پیدائش",
+joining:"جوائننگ / سروس شروع ہونے کی تاریخ",
+calculateUpTo:"کس تاریخ تک حساب کریں",
+retirementAge:"ریٹائرمنٹ کی عمر",
+targetService:"مطلوبہ سروس",
+profileName:"پروفائل کا نام",
+
+calculate:"مکمل حساب کریں",
+saveProfile:"پروفائل محفوظ کریں",
+profiles:"پروفائلز",
+
+updated:"ڈیش بورڈ اپڈیٹ ہوا",
+active:"فعال",
+
+age:"موجودہ عمر",
+service:"مکمل سروس",
+daysLived:"گزرے ہوئے دن",
+totalDays:"کل دن",
+target:"سروس کا ہدف",
+
+liveCountdowns:"لائیو کاؤنٹ ڈاؤن",
+nextBirthday:"اگلی سالگرہ",
+retirement:"ریٹائرمنٹ",
+serviceGoal:"سروس کا ہدف",
+
+progress:"پروگریس",
+retirementProgress:"ریٹائرمنٹ پروگریس",
+serviceProgress:"سروس پروگریس",
+
+milestones:"سروس کے سنگِ میل",
+careerTimeline:"کیریئر ٹائم لائن",
+
+importantInfo:"اہم معلومات",
+
+noteTitle:"نوٹ:",
+note:
+"ریٹائرمنٹ کا حساب آپ کی منتخب کردہ عمر کی بنیاد پر اندازاً ہے۔ اصل ریٹائرمنٹ کے قوانین ادارے، محکمہ یا متعلقہ قانون کے مطابق مختلف ہو سکتے ہیں۔",
+
+actions:"آپشنز",
+copy:"کاپی",
+share:"شیئر",
+pdf:"پرنٹ / PDF",
+reset:"کیلکولیٹر ری سیٹ کریں",
+
+years:"سال",
+months:"ماہ",
+days:"دن",
+year:"سال",
+
+completed:"مکمل",
+remaining:"باقی",
+today:"آج 🎉",
+reached:"پورا ہو چکا",
+
+joined:"جوائننگ",
+birthday:"سالگرہ",
+serviceMilestone:"سروس کا سنگِ میل",
+retirementMilestone:"ریٹائرمنٹ",
+
+saved:"پروفائل محفوظ ہو گیا!",
+copied:"رپورٹ کاپی ہو گئی!",
+deleted:"پروفائل حذف ہو گیا!",
+loaded:"پروفائل لوڈ ہو گیا!",
+
+invalid:"براہ کرم تمام ضروری تاریخیں درج کریں۔",
+joiningError:"جوائننگ کی تاریخ پیدائش سے پہلے نہیں ہو سکتی۔",
+currentError:"حساب کی تاریخ پیدائش سے پہلے نہیں ہو سکتی۔",
+futureJoining:"جوائننگ کی تاریخ حساب کی تاریخ کے بعد نہیں ہو سکتی۔"
+}
+
+};
+
+
+let lang=
+localStorage.getItem("calcLang")||"en";
+
+let theme=
+localStorage.getItem("calcTheme")||"dark";
+
+let liveTimer=null;
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+function t(key){
+return T[lang][key]||key;
+}
+
+function localISO(date=new Date()){
+
+return `${date.getFullYear()}-`+
+`${String(date.getMonth()+1).padStart(2,"0")}-`+
+`${String(date.getDate()).padStart(2,"0")}`;
+
+}
 
 function parseDate(value){
 
-  return new Date(
-    value + "T00:00:00"
-  );
+if(!value)return null;
+
+return new Date(value+"T00:00:00");
 
 }
-
-
-function daysBetween(start,end){
-
-  const oneDay =
-    1000 * 60 * 60 * 24;
-
-  return Math.floor(
-    (end - start) / oneDay
-  );
-
-}
-
-
-/* =========================================================
-   EXACT DIFFERENCE
-========================================================= */
-
-function exactDifference(start,end){
-
-  let years =
-    end.getFullYear()
-    -
-    start.getFullYear();
-
-  let months =
-    end.getMonth()
-    -
-    start.getMonth();
-
-  let days =
-    end.getDate()
-    -
-    start.getDate();
-
-
-  if(days < 0){
-
-    months--;
-
-    const previousMonth =
-      new Date(
-        end.getFullYear(),
-        end.getMonth(),
-        0
-      );
-
-    days +=
-      previousMonth.getDate();
-
-  }
-
-
-  if(months < 0){
-
-    years--;
-
-    months += 12;
-
-  }
-
-
-  return {
-    years,
-    months,
-    days
-  };
-
-}
-
-
-/* =========================================================
-   ADD YEARS
-========================================================= */
-
-function addYears(date,years){
-
-  const result =
-    new Date(date);
-
-  result.setFullYear(
-    result.getFullYear() + years
-  );
-
-  /*
-    Handle Feb 29 when target
-    year is not leap year.
-  */
-
-  if(
-    result.getMonth()
-    !==
-    date.getMonth()
-  ){
-
-    result.setDate(0);
-
-  }
-
-  return result;
-
-}
-
-
-/* =========================================================
-   FORMAT DATE
-========================================================= */
 
 function formatDate(date){
 
-  return date.toLocaleDateString(
-    "en-GB",
-    {
-      day:"2-digit",
-      month:"short",
-      year:"numeric"
-    }
-  );
+return date.toLocaleDateString(
+lang==="ur"?"ur-PK":"en-GB",
+{
+day:"2-digit",
+month:"short",
+year:"numeric"
+}
+);
+
+}
+
+function number(n){
+
+return Number(n).toLocaleString(
+lang==="ur"?"ur-PK":"en-US"
+);
+
+}
+
+function daysBetween(a,b){
+
+return Math.max(
+0,
+Math.floor(
+(b.getTime()-a.getTime())/86400000
+)
+);
+
+}
+
+function exact(a,b){
+
+if(b<=a){
+
+return {
+years:0,
+months:0,
+days:0
+};
+
+}
+
+let years=
+b.getFullYear()-a.getFullYear();
+
+let months=
+b.getMonth()-a.getMonth();
+
+let days=
+b.getDate()-a.getDate();
+
+if(days<0){
+
+months--;
+
+const prev=
+new Date(
+b.getFullYear(),
+b.getMonth(),
+0
+);
+
+days+=prev.getDate();
+
+}
+
+if(months<0){
+
+years--;
+months+=12;
+
+}
+
+return {years,months,days};
+
+}
+
+function addYears(date,years){
+
+const result=
+new Date(date);
+
+const month=
+result.getMonth();
+
+result.setFullYear(
+result.getFullYear()+years
+);
+
+if(result.getMonth()!==month){
+
+result.setDate(0);
+
+}
+
+return result;
+
+}
+
+function differenceText(d){
+
+return `${d.years} ${t("years")} • `+
+`${d.months} ${t("months")} • `+
+`${d.days} ${t("days")}`;
 
 }
 
 
-/* =========================================================
-   NUMBER FORMAT
-========================================================= */
+/* =========================================
+   SELECTS
+========================================= */
 
-function formatNumber(number){
+function populateSelects(){
 
-  return number.toLocaleString(
-    "en-US"
-  );
+const retirement=
+document.getElementById("retirementAge");
+
+const service=
+document.getElementById("serviceTarget");
+
+retirement.innerHTML="";
+service.innerHTML="";
+
+for(let i=55;i<=65;i++){
+
+const o=document.createElement("option");
+
+o.value=i;
+
+o.textContent=
+lang==="ur"
+?`${i} ${t("years")}`
+:`${i} Years`;
+
+retirement.appendChild(o);
+
+}
+
+for(let i=18;i<=60;i++){
+
+const o=document.createElement("option");
+
+o.value=i;
+
+o.textContent=
+lang==="ur"
+?`${i} ${t("years")}`
+:`${i} Years`;
+
+service.appendChild(o);
+
+}
+
+retirement.value=
+localStorage.getItem("retAge")||"60";
+
+service.value=
+localStorage.getItem("serviceTarget")||"30";
 
 }
 
 
-/* =========================================================
-   CALCULATE ALL
-========================================================= */
+/* =========================================
+   LANGUAGE
+========================================= */
 
-function calculateAll(){
+function applyLanguage(){
 
-  const dobValue =
-    document.getElementById(
-      "dob"
-    ).value;
+document.documentElement.lang=lang;
 
+document.body.classList.toggle(
+"urdu",
+lang==="ur"
+);
 
-  const joiningValue =
-    document.getElementById(
-      "joining"
-    ).value;
+document.querySelectorAll("[data-i18n]")
+.forEach(el=>{
 
+const key=
+el.getAttribute("data-i18n");
 
-  const currentValue =
-    document.getElementById(
-      "currentDate"
-    ).value;
+el.textContent=t(key);
 
+});
 
-  const retirementAge =
-    Number(
-      document.getElementById(
-        "retirementAge"
-      ).value
-    );
+document.getElementById("languageBtn")
+.textContent=
+lang==="en"?"اردو":"English";
 
+populateSelects();
 
-  const serviceTarget =
-    Number(
-      document.getElementById(
-        "serviceTarget"
-      ).value
-    );
+localStorage.setItem("calcLang",lang);
 
+if(document.getElementById("dashboard").classList.contains("show")){
 
-  /* Validation */
+calculate(false);
 
-  if(
-    !dobValue ||
-    !joiningValue ||
-    !currentValue
-  ){
+}
 
-    alert(
-      "Please enter Date of Birth, Joining Date and Calculate Up To date."
-    );
+}
 
-    return;
+function toggleLanguage(){
 
-  }
+lang=lang==="en"?"ur":"en";
 
-
-  const dob =
-    parseDate(dobValue);
-
-  const joining =
-    parseDate(joiningValue);
-
-  const current =
-    parseDate(currentValue);
-
-
-  /* Date validation */
-
-  if(dob > current){
-
-    alert(
-      "Date of Birth cannot be after the calculation date."
-    );
-
-    return;
-
-  }
-
-
-  if(joining > current){
-
-    alert(
-      "Joining date cannot be after the calculation date."
-    );
-
-    return;
-
-  }
-
-
-  /* =======================================================
-     AGE
-  ====================================================== */
-
-  const age =
-    exactDifference(
-      dob,
-      current
-    );
-
-
-  /* =======================================================
-     SERVICE
-  ====================================================== */
-
-  const service =
-    exactDifference(
-      joining,
-      current
-    );
-
-
-  /* =======================================================
-     DAYS
-  ====================================================== */
-
-  const livedDays =
-    daysBetween(
-      dob,
-      current
-    );
-
-
-  const serviceDaysValue =
-    daysBetween(
-      joining,
-      current
-    );
-
-
-  /* =======================================================
-     AGE OUTPUT
-  ====================================================== */
-
-  document.getElementById(
-    "ageResult"
-  ).textContent =
-
-    `${age.years} Years, `
-    +
-    `${age.months} Months, `
-    +
-    `${age.days} Days`;
-
-
-  /* =======================================================
-     SERVICE OUTPUT
-  ====================================================== */
-
-  document.getElementById(
-    "serviceResult"
-  ).textContent =
-
-    `${service.years} Years, `
-    +
-    `${service.months} Months, `
-    +
-    `${service.days} Days`;
-
-
-  /* =======================================================
-     DAYS OUTPUT
-  ====================================================== */
-
-  document.getElementById(
-    "daysLived"
-  ).textContent =
-
-    formatNumber(
-      livedDays
-    );
-
-
-  document.getElementById(
-    "serviceDays"
-  ).textContent =
-
-    formatNumber(
-      serviceDaysValue
-    );
-
-
-  /* =======================================================
-     DECIMAL AGE
-  ====================================================== */
-
-  const decimalAge =
-    (
-      livedDays /
-      365.2425
-    ).toFixed(2);
-
-
-  document.getElementById(
-    "ageDecimal"
-  ).textContent =
-
-    decimalAge +
-    " Years";
-
-
-  /* =======================================================
-     NEXT BIRTHDAY
-  ====================================================== */
-
-  let nextBirthday =
-    new Date(
-      current.getFullYear(),
-      dob.getMonth(),
-      dob.getDate()
-    );
-
-
-  if(nextBirthday < current){
-
-    nextBirthday =
-      new Date(
-        current.getFullYear() + 1,
-        dob.getMonth(),
-        dob.getDate()
-      );
-
-  }
-
-
-  const birthdayDays =
-    daysBetween(
-      current,
-      nextBirthday
-    );
-
-
-  document.getElementById(
-    "birthdayResult"
-  ).textContent =
-
-    birthdayDays === 0
-
-      ? "Today 🎉"
-
-      : formatDate(nextBirthday);
-
-
-  /* =======================================================
-     RETIREMENT DATE
-  ====================================================== */
-
-  const retirementDate =
-    addYears(
-      dob,
-      retirementAge
-    );
-
-
-  document.getElementById(
-    "retirementDate"
-  ).textContent =
-
-    formatDate(
-      retirementDate
-    );
-
-
-  document.getElementById(
-    "retirementAgeText"
-  ).textContent =
-
-    retirementAge +
-    " Years";
-
-
-  /* =======================================================
-     REMAINING RETIREMENT TIME
-  ====================================================== */
-
-  if(current < retirementDate){
-
-    const remaining =
-      exactDifference(
-        current,
-        retirementDate
-      );
-
-
-    document.getElementById(
-      "remainingTime"
-    ).textContent =
-
-      `${remaining.years} Years, `
-      +
-      `${remaining.months} Months, `
-      +
-      `${remaining.days} Days remaining`;
-
-
-  }else{
-
-    document.getElementById(
-      "remainingTime"
-    ).textContent =
-
-      "Retirement age reached";
-
-  }
-
-
-  /* =======================================================
-     RETIREMENT PROGRESS
-  ====================================================== */
-
-  const totalLifeDays =
-    daysBetween(
-      dob,
-      retirementDate
-    );
-
-
-  const elapsedLifeDays =
-    daysBetween(
-      dob,
-      current
-    );
-
-
-  let progress =
-    (
-      elapsedLifeDays /
-      totalLifeDays
-    ) * 100;
-
-
-  progress =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        progress
-      )
-    );
-
-
-  document.getElementById(
-    "progressFill"
-  ).style.width =
-
-    progress.toFixed(1) +
-    "%";
-
-
-  document.getElementById(
-    "progressPercent"
-  ).textContent =
-
-    progress.toFixed(1) +
-    "%";
-
-
-  /* =======================================================
-     SERVICE TARGET DATE
-  ====================================================== */
-
-  const serviceTargetDate =
-    new Date(joining);
-
-  serviceTargetDate.setFullYear(
-    serviceTargetDate.getFullYear()
-    +
-    serviceTarget
-  );
-
-
-  document.getElementById(
-    "targetText"
-  ).textContent =
-
-    serviceTarget +
-    " Years";
-
-
-  document.getElementById(
-    "serviceTargetDate"
-  ).textContent =
-
-    formatDate(
-      serviceTargetDate
-    );
-
-
-  /* =======================================================
-     SERVICE TARGET REMAINING
-  ====================================================== */
-
-  if(
-    current <
-    serviceTargetDate
-  ){
-
-    const targetRemaining =
-      exactDifference(
-        current,
-        serviceTargetDate
-      );
-
-
-    document.getElementById(
-      "serviceRemaining"
-    ).textContent =
-
-      `${targetRemaining.years} Years, `
-      +
-      `${targetRemaining.months} Months, `
-      +
-      `${targetRemaining.days} Days remaining`;
-
-  }else{
-
-    document.getElementById(
-      "serviceRemaining"
-    ).textContent =
-
-      "Service target completed 🎉";
-
-  }
-
-
-  /* =======================================================
-     EXTRA INFO
-  ====================================================== */
-
-  document.getElementById(
-    "extraInfo"
-  ).innerHTML =
-
-    `You are currently `
-    +
-    `<b>${age.years} years</b> old `
-    +
-    `and have completed `
-    +
-    `<b>${service.years} years</b> `
-    +
-    `of service.`
-    +
-    `<br><br>`
-    +
-    `Estimated retirement date at `
-    +
-    `<b>${retirementAge} years</b>: `
-    +
-    `<b>${formatDate(retirementDate)}</b>.`;
-
-
-  /* =======================================================
-     SHOW RESULTS
-  ====================================================== */
-
-  document.getElementById(
-    "results"
-  ).style.display =
-    "block";
-
-
-  document.getElementById(
-    "results"
-  ).scrollIntoView({
-    behavior:"smooth"
-  });
+applyLanguage();
 
 }
 
 
-/* =========================================================
+/* =========================================
+   THEME
+========================================= */
+
+function applyTheme(){
+
+document.body.classList.toggle(
+"light",
+theme==="light"
+);
+
+document.getElementById("themeBtn")
+.textContent=
+theme==="dark"?"☀️":"🌙";
+
+localStorage.setItem("calcTheme",theme);
+
+}
+
+function toggleTheme(){
+
+theme=
+theme==="dark"?"light":"dark";
+
+applyTheme();
+
+}
+
+
+/* =========================================
+   COUNTDOWN
+========================================= */
+
+function countdown(start,end){
+
+if(start>=end){
+
+return t("completed");
+
+}
+
+const d=exact(start,end);
+
+return differenceText(d);
+
+}
+
+
+/* =========================================
+   CALCULATE
+========================================= */
+
+function calculate(scroll=true){
+
+const dob=
+parseDate(
+document.getElementById("dob").value
+);
+
+const joining=
+parseDate(
+document.getElementById("joining").value
+);
+
+const current=
+parseDate(
+document.getElementById("currentDate").value
+);
+
+const retirementAge=
+Number(
+document.getElementById("retirementAge").value
+);
+
+const serviceTarget=
+Number(
+document.getElementById("serviceTarget").value
+);
+
+
+if(!dob||!joining||!current){
+
+alert(t("invalid"));
+return;
+
+}
+
+if(joining<dob){
+
+alert(t("joiningError"));
+return;
+
+}
+
+if(current<dob){
+
+alert(t("currentError"));
+return;
+
+}
+
+if(current<joining){
+
+alert(t("futureJoining"));
+return;
+
+}
+
+
+/* SAVE */
+
+localStorage.setItem(
+"dob",
+document.getElementById("dob").value
+);
+
+localStorage.setItem(
+"joining",
+document.getElementById("joining").value
+);
+
+localStorage.setItem(
+"current",
+document.getElementById("currentDate").value
+);
+
+localStorage.setItem(
+"retAge",
+retirementAge
+);
+
+localStorage.setItem(
+"serviceTarget",
+serviceTarget
+);
+
+
+/* AGE */
+
+const age=exact(dob,current);
+
+document.getElementById("ageResult")
+.textContent=
+`${age.years} ${t("years")}`;
+
+document.getElementById("ageExtra")
+.textContent=
+`${age.months} ${t("months")} • ${age.days} ${t("days")}`;
+
+
+/* SERVICE */
+
+const service=exact(joining,current);
+
+document.getElementById("serviceResult")
+.textContent=
+`${service.years} ${t("years")}`;
+
+document.getElementById("serviceExtra")
+.textContent=
+`${service.months} ${t("months")} • ${service.days} ${t("days")}`;
+
+
+/* DAYS */
+
+document.getElementById("daysLived")
+.textContent=
+number(daysBetween(dob,current));
+
+
+/* TARGET */
+
+document.getElementById("targetResult")
+.textContent=
+`${serviceTarget} ${t("years")}`;
+
+document.getElementById("targetExtra")
+.textContent=
+t("serviceMilestone");
+
+
+/* RETIREMENT */
+
+const retirementDate=
+addYears(dob,retirementAge);
+
+document.getElementById("retirementDate")
+.textContent=
+formatDate(retirementDate);
+
+document.getElementById("retirementCountdown")
+.textContent=
+countdown(current,retirementDate);
+
+
+/* SERVICE TARGET DATE */
+
+const serviceDate=
+addYears(joining,serviceTarget);
+
+document.getElementById("serviceTargetDate")
+.textContent=
+formatDate(serviceDate);
+
+document.getElementById("serviceCountdown")
+.textContent=
+countdown(current,serviceDate);
+
+
+/* BIRTHDAY */
+
+let birthday=
+new Date(
+current.getFullYear(),
+dob.getMonth(),
+dob.getDate()
+);
+
+if(birthday<current){
+
+birthday=
+new Date(
+current.getFullYear()+1,
+dob.getMonth(),
+dob.getDate()
+);
+
+}
+
+document.getElementById("birthdayDate")
+.textContent=
+formatDate(birthday);
+
+document.getElementById("birthdayCountdown")
+.textContent=
+countdown(current,birthday);
+
+
+/* RETIREMENT PROGRESS */
+
+const totalRetirement=
+daysBetween(dob,retirementDate);
+
+const elapsedRetirement=
+Math.min(
+totalRetirement,
+daysBetween(dob,current)
+);
+
+let rp=
+totalRetirement
+?elapsedRetirement/totalRetirement*100
+:100;
+
+rp=Math.max(0,Math.min(100,rp));
+
+document.getElementById("retirementFill")
+.style.width=rp+"%";
+
+document.getElementById("retirementPercent")
+.textContent=
+rp.toFixed(1)+"%";
+
+document.getElementById("retirementInfo")
+.textContent=
+`${formatDate(dob)} → ${formatDate(retirementDate)}`;
+
+
+/* SERVICE PROGRESS */
+
+const totalService=
+daysBetween(joining,serviceDate);
+
+const elapsedService=
+Math.min(
+totalService,
+daysBetween(joining,current)
+);
+
+let sp=
+totalService
+?elapsedService/totalService*100
+:100;
+
+sp=Math.max(0,Math.min(100,sp));
+
+document.getElementById("serviceFill")
+.style.width=sp+"%";
+
+document.getElementById("servicePercent")
+.textContent=
+sp.toFixed(1)+"%";
+
+document.getElementById("serviceInfo")
+.textContent=
+`${formatDate(joining)} → ${formatDate(serviceDate)}`;
+
+
+/* PROFILE */
+
+document.getElementById("dashboardProfile")
+.textContent=
+document.getElementById("profileName").value.trim()
+||"My Profile";
+
+
+/* MILESTONES */
+
+buildMilestones(
+joining,
+current,
+serviceTarget
+);
+
+
+/* TIMELINE */
+
+buildTimeline(
+dob,
+joining,
+current,
+retirementDate,
+serviceTarget
+);
+
+
+/* SHOW */
+
+document.getElementById("dashboard")
+.classList.add("show");
+
+
+/* LIVE REFRESH */
+
+startLiveRefresh();
+
+
+if(scroll){
+
+setTimeout(()=>{
+
+document.getElementById("dashboard")
+.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
+
+},100);
+
+}
+
+}
+
+
+/* =========================================
+   MILESTONES
+========================================= */
+
+function buildMilestones(
+joining,
+current,
+target
+){
+
+const box=
+document.getElementById("milestones");
+
+box.innerHTML="";
+
+
+const milestoneYears=[
+18,20,25,30,35,40,45,50,55,60
+];
+
+
+/*
+  Add selected target if not already
+*/
+
+if(!milestoneYears.includes(target)){
+
+milestoneYears.push(target);
+
+milestoneYears.sort((a,b)=>a-b);
+
+}
+
+
+milestoneYears.forEach(years=>{
+
+const date=
+addYears(joining,years);
+
+const completed=
+current>=date;
+
+const item=
+document.createElement("div");
+
+item.className=
+"milestone"+
+(completed?" completed":"");
+
+
+item.innerHTML=`
+
+<div class="milestone-top">
+
+<div class="milestone-years">
+${years} ${t("years")}
+</div>
+
+<div class="milestone-status">
+${completed?"✓ "+t("completed"):""}
+</div>
+
+</div>
+
+<div class="milestone-date">
+${formatDate(date)}
+</div>
+
+<div class="milestone-left">
+
+${
+completed
+?t("completed")
+:countdown(current,date)
+}
+
+</div>
+
+`;
+
+box.appendChild(item);
+
+});
+
+}
+
+
+/* =========================================
+   TIMELINE
+========================================= */
+
+function buildTimeline(
+dob,
+joining,
+current,
+retirementDate,
+target
+){
+
+const timeline=
+document.getElementById("timeline");
+
+timeline.innerHTML="";
+
+
+function addItem(
+title,
+date,
+description
+){
+
+const item=
+document.createElement("div");
+
+item.className="timeline-item";
+
+item.innerHTML=`
+
+<div class="timeline-title">
+${title}
+</div>
+
+<div class="timeline-date">
+${formatDate(date)}
+</div>
+
+<div class="timeline-description">
+${description}
+</div>
+
+`;
+
+timeline.appendChild(item);
+
+}
+
+
+/* BIRTH */
+
+addItem(
+t("dob"),
+dob,
+t("birthday")
+);
+
+
+/* JOINING */
+
+addItem(
+t("joining"),
+joining,
+t("joined")
+);
+
+
+/* SERVICE MILESTONES */
+
+[
+5,10,15,20,25,30,35,40,45,50,55,60
+].forEach(years=>{
+
+const date=
+addYears(joining,years);
+
+if(
+date<=retirementDate &&
+years<=60
+){
+
+addItem(
+`${years} ${t("years")} — ${t("serviceMilestone")}`,
+date,
+date<=current
+?t("completed")
+:countdown(current,date)
+);
+
+}
+
+});
+
+
+/* TARGET */
+
+const targetDate=
+addYears(joining,target);
+
+if(
+targetDate<=retirementDate
+){
+
+addItem(
+`${target} ${t("years")} — ${t("target")}`,
+targetDate,
+targetDate<=current
+?t("completed")
+:countdown(current,targetDate)
+);
+
+}
+
+
+/* RETIREMENT */
+
+addItem(
+t("retirementMilestone"),
+retirementDate,
+retirementDate<=current
+?t("reached")
+:countdown(current,retirementDate)
+);
+
+}
+
+
+/* =========================================
+   LIVE REFRESH
+========================================= */
+
+function startLiveRefresh(){
+
+if(liveTimer){
+
+clearInterval(liveTimer);
+
+}
+
+liveTimer=
+setInterval(()=>{
+
+if(
+document.getElementById("dashboard")
+.classList.contains("show")
+){
+
+calculate(false);
+
+}
+
+},60000);
+
+}
+
+
+/* =========================================
+   REPORT
+========================================= */
+
+function reportText(){
+
+return `
+
+${T[lang].appName}
+
+${T[lang].dob}: ${
+document.getElementById("dob").value
+}
+
+${T[lang].joining}: ${
+document.getElementById("joining").value
+}
+
+${T[lang].calculateUpTo}: ${
+document.getElementById("currentDate").value
+}
+
+${T[lang].age}: ${
+document.getElementById("ageResult").textContent
+}
+${
+document.getElementById("ageExtra").textContent
+}
+
+${T[lang].service}: ${
+document.getElementById("serviceResult").textContent
+}
+${
+document.getElementById("serviceExtra").textContent
+}
+
+${T[lang].daysLived}: ${
+document.getElementById("daysLived").textContent
+}
+
+${T[lang].nextBirthday}:
+${
+document.getElementById("birthdayDate").textContent
+}
+${
+document.getElementById("birthdayCountdown").textContent
+}
+
+${T[lang].retirement}:
+${
+document.getElementById("retirementDate").textContent
+}
+${
+document.getElementById("retirementCountdown").textContent
+}
+
+${T[lang].retirementProgress}:
+${
+document.getElementById("retirementPercent").textContent
+}
+
+${T[lang].serviceGoal}:
+${
+document.getElementById("serviceTargetDate").textContent
+}
+${
+document.getElementById("serviceCountdown").textContent
+}
+
+${T[lang].serviceProgress}:
+${
+document.getElementById("servicePercent").textContent
+}
+
+`;
+
+}
+
+
+/* =========================================
+   COPY
+========================================= */
+
+async function copyReport(){
+
+const text=reportText();
+
+try{
+
+await navigator.clipboard.writeText(text);
+
+alert(t("copied"));
+
+}catch(e){
+
+const textarea=
+document.createElement("textarea");
+
+textarea.value=text;
+
+document.body.appendChild(textarea);
+
+textarea.select();
+
+document.execCommand("copy");
+
+textarea.remove();
+
+alert(t("copied"));
+
+}
+
+}
+
+
+/* =========================================
+   SHARE
+========================================= */
+
+async function shareReport(){
+
+const text=reportText();
+
+if(navigator.share){
+
+try{
+
+await navigator.share({
+title:t("appName"),
+text:text
+});
+
+}catch(e){}
+
+}else{
+
+copyReport();
+
+}
+
+}
+
+
+/* =========================================
+   WHATSAPP
+========================================= */
+
+function whatsappReport(){
+
+const text=
+encodeURIComponent(
+reportText()
+);
+
+window.open(
+"https://wa.me/?text="+text,
+"_blank"
+);
+
+}
+
+
+/* =========================================
+   PRINT
+========================================= */
+
+function printReport(){
+
+window.print();
+
+}
+
+
+/* =========================================
+   SAVE PROFILE
+========================================= */
+
+function saveProfile(){
+
+const name=
+document.getElementById("profileName")
+.value.trim();
+
+const dob=
+document.getElementById("dob").value;
+
+const joining=
+document.getElementById("joining").value;
+
+if(!name||!dob||!joining){
+
+alert(t("invalid"));
+
+return;
+
+}
+
+
+const profiles=
+JSON.parse(
+localStorage.getItem("profiles")||"[]"
+);
+
+
+const profile={
+
+id:Date.now(),
+
+name:name,
+
+dob:dob,
+
+joining:joining,
+
+current:
+document.getElementById("currentDate").value,
+
+retirement:
+document.getElementById("retirementAge").value,
+
+target:
+document.getElementById("serviceTarget").value
+
+};
+
+
+profiles.push(profile);
+
+localStorage.setItem(
+"profiles",
+JSON.stringify(profiles)
+);
+
+alert(t("saved"));
+
+renderProfiles();
+
+}
+
+
+/* =========================================
+   PROFILE LIST
+========================================= */
+
+function toggleProfiles(){
+
+const list=
+document.getElementById("profileList");
+
+list.classList.toggle("show");
+
+renderProfiles();
+
+}
+
+
+function renderProfiles(){
+
+const list=
+document.getElementById("profileList");
+
+const profiles=
+JSON.parse(
+localStorage.getItem("profiles")||"[]"
+);
+
+list.innerHTML="";
+
+
+if(!profiles.length){
+
+list.innerHTML=
+`<div style="color:var(--muted);font-size:12px;padding:10px">
+${lang==="ur"?"ابھی کوئی پروفائل محفوظ نہیں۔":"No saved profiles yet."}
+</div>`;
+
+return;
+
+}
+
+
+profiles.forEach(profile=>{
+
+const row=
+document.createElement("div");
+
+row.className="profile-row";
+
+row.innerHTML=`
+
+<div class="profile-row-name">
+👤 ${profile.name}
+</div>
+
+<div class="profile-row-actions">
+
+<button onclick="loadProfile(${profile.id})">
+▶
+</button>
+
+<button onclick="deleteProfile(${profile.id})">
+🗑️
+</button>
+
+</div>
+
+`;
+
+list.appendChild(row);
+
+});
+
+}
+
+
+/* =========================================
+   LOAD PROFILE
+========================================= */
+
+function loadProfile(id){
+
+const profiles=
+JSON.parse(
+localStorage.getItem("profiles")||"[]"
+);
+
+const profile=
+profiles.find(p=>p.id===id);
+
+if(!profile)return;
+
+
+document.getElementById("profileName").value=
+profile.name;
+
+document.getElementById("dob").value=
+profile.dob;
+
+document.getElementById("joining").value=
+profile.joining;
+
+document.getElementById("currentDate").value=
+profile.current||localISO();
+
+document.getElementById("retirementAge").value=
+profile.retirement||60;
+
+document.getElementById("serviceTarget").value=
+profile.target||30;
+
+calculate();
+
+}
+
+
+/* =========================================
+   DELETE PROFILE
+========================================= */
+
+function deleteProfile(id){
+
+let profiles=
+JSON.parse(
+localStorage.getItem("profiles")||"[]"
+);
+
+profiles=
+profiles.filter(p=>p.id!==id);
+
+localStorage.setItem(
+"profiles",
+JSON.stringify(profiles)
+);
+
+renderProfiles();
+
+alert(t("deleted"));
+
+}
+
+
+/* =========================================
    RESET
-========================================================= */
+========================================= */
 
-function resetCalculator(){
+function resetAll(){
 
-  document.getElementById(
-    "dob"
-  ).value = "";
+document.getElementById("dob").value="";
 
+document.getElementById("joining").value="";
 
-  document.getElementById(
-    "joining"
-  ).value = "";
+document.getElementById("currentDate").value=
+localISO();
 
+document.getElementById("profileName").value="";
 
-  document.getElementById(
-    "currentDate"
-  ).value =
+document.getElementById("retirementAge").value="60";
 
-    new Date()
-      .toISOString()
-      .split("T")[0];
+document.getElementById("serviceTarget").value="30";
 
+document.getElementById("dashboard")
+.classList.remove("show");
 
-  document.getElementById(
-    "retirementAge"
-  ).value = "60";
+localStorage.removeItem("dob");
+localStorage.removeItem("joining");
 
-
-  document.getElementById(
-    "serviceTarget"
-  ).value = "30";
-
-
-  document.getElementById(
-    "results"
-  ).style.display =
-    "none";
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 
 }
 
 
-/* =========================================================
-   DEFAULT CURRENT DATE
-========================================================= */
+/* =========================================
+   LOAD SAVED MAIN DATA
+========================================= */
 
-document.getElementById(
-  "currentDate"
-).value =
+function loadSaved(){
 
-  new Date()
-    .toISOString()
-    .split("T")[0];
+document.getElementById("currentDate").value=
+localStorage.getItem("current")||localISO();
+
+const dob=
+localStorage.getItem("dob");
+
+const joining=
+localStorage.getItem("joining");
+
+if(dob)
+document.getElementById("dob").value=dob;
+
+if(joining)
+document.getElementById("joining").value=joining;
+
+document.getElementById("retirementAge").value=
+localStorage.getItem("retAge")||60;
+
+document.getElementById("serviceTarget").value=
+localStorage.getItem("serviceTarget")||30;
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+applyTheme();
+
+populateSelects();
+
+applyLanguage();
+
+loadSaved();
+
+renderProfiles();
+
+if(
+localStorage.getItem("dob") &&
+localStorage.getItem("joining")
+){
+
+calculate(false);
+
+}
+
+}
+);
+
+
+/* SELECT SAVE */
+
+document.addEventListener(
+"change",
+e=>{
+
+if(e.target.id==="retirementAge"){
+
+localStorage.setItem(
+"retAge",
+e.target.value
+);
+
+}
+
+if(e.target.id==="serviceTarget"){
+
+localStorage.setItem(
+"serviceTarget",
+e.target.value
+);
+
+}
+
+if(e.target.id==="currentDate"){
+
+localStorage.setItem(
+"current",
+e.target.value
+);
+
+}
+
+}
+);
 
 </script>
 
