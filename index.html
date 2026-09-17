@@ -1,327 +1,573 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Smart Assistant Pro</title>
-    <!-- FontAwesome for App Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background-color: #0d1117;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
+<title>Age & Service Calculator</title>
+<meta name="description" content="Professional Age and Service Calculator">
 
-        /* App Bar Header */
-        header {
-            background: #161b22;
-            padding: 16px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #58a6ff;
-            border-bottom: 1px solid #30363d;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
 
-        /* App Navigation Tabs */
-        .tab-bar {
-            display: flex;
-            background: #161b22;
-            border-bottom: 1px solid #30363d;
-        }
+body{
+  min-height:100vh;
+  color:#fff;
+  background:
+    radial-gradient(circle at top left,#243b80 0,#10172f 35%,#060914 75%);
+  overflow-x:hidden;
+}
 
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            background: none;
-            border: none;
-            color: #8b949e;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            border-bottom: 2px solid transparent;
-        }
+/* Decorative background */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  border-radius:50%;
+  filter:blur(2px);
+  z-index:-1;
+}
 
-        .tab-btn.active {
-            color: #58a6ff;
-            border-bottom-color: #58a6ff;
-            background: rgba(88, 166, 255, 0.05);
-        }
+body::before{
+  width:260px;
+  height:260px;
+  background:rgba(0,220,255,.13);
+  top:-80px;
+  right:-70px;
+}
 
-        /* Screen Container */
-        .content-area {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+body::after{
+  width:220px;
+  height:220px;
+  background:rgba(130,70,255,.13);
+  bottom:-70px;
+  left:-60px;
+}
 
-        .tab-content {
-            display: none;
-            width: 100%;
-            max-width: 500px;
-            flex-direction: column;
-            gap: 15px;
-        }
+/* Header */
+.header{
+  padding:24px 18px 10px;
+  text-align:center;
+}
 
-        .tab-content.active {
-            display: flex;
-        }
+.logo{
+  width:72px;
+  height:72px;
+  margin:auto;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  font-weight:900;
+  background:linear-gradient(135deg,#00d9ff,#5865ff,#9c4dff);
+  box-shadow:0 15px 40px rgba(0,210,255,.25);
+}
 
-        /* Input Controls */
-        textarea, input, select {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid #30363d;
-            background-color: #161b22;
-            color: #ffffff;
-            font-size: 15px;
-            outline: none;
-        }
+.header h1{
+  margin-top:15px;
+  font-size:27px;
+}
 
-        textarea:focus, input:focus, select:focus {
-            border-color: #58a6ff;
-        }
+.header p{
+  margin-top:7px;
+  color:#aeb8d5;
+  font-size:14px;
+}
 
-        textarea {
-            height: 120px;
-            resize: none;
-        }
+/* Main */
+.container{
+  width:min(720px,94%);
+  margin:20px auto 40px;
+}
 
-        /* App Action Buttons */
-        .btn-primary {
-            background: linear-gradient(135deg, #238636, #2ea043);
-            color: white;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(35, 134, 54, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
+.card{
+  background:rgba(17,25,49,.78);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:28px;
+  padding:22px;
+  margin-bottom:18px;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,.35),
+    inset 0 1px rgba(255,255,255,.05);
+  backdrop-filter:blur(16px);
+}
 
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:18px;
+  margin-bottom:18px;
+}
 
-        /* Output Box */
-        .output-box {
-            margin-top: 10px;
-            background-color: #161b22;
-            border: 1px dashed #30363d;
-            border-radius: 12px;
-            padding: 15px;
-            min-height: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-        }
+.icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#00cfff,#675cff);
+  font-size:19px;
+}
 
-        .output-box img {
-            max-width: 100%;
-            border-radius: 8px;
-            display: none;
-        }
+/* Inputs */
+.input-group{
+  margin-bottom:16px;
+}
 
-        .output-text {
-            color: #c9d1d9;
-            font-size: 14px;
-            line-height: 1.5;
-            text-align: left;
-            width: 100%;
-            white-space: pre-wrap;
-        }
+label{
+  display:block;
+  margin-bottom:8px;
+  color:#bdc7e2;
+  font-size:13px;
+  font-weight:600;
+}
 
-        .loading-spinner {
-            display: none;
-            color: #58a6ff;
-            font-size: 14px;
-        }
+input{
+  width:100%;
+  padding:15px 16px;
+  border:none;
+  outline:none;
+  border-radius:15px;
+  color:#fff;
+  background:#0a1125;
+  border:1px solid #263454;
+  font-size:15px;
+  transition:.2s;
+}
 
-        /* Ad Banner Placeholder (Play Store Monetization) */
-        .ad-banner {
-            background-color: #161b22;
-            border-top: 1px solid #30363d;
-            padding: 10px;
-            text-align: center;
-            font-size: 12px;
-            color: #8b949e;
-        }
-    </style>
+input:focus{
+  border-color:#00d9ff;
+  box-shadow:0 0 0 3px rgba(0,217,255,.1);
+}
+
+/* Button */
+.calculate{
+  width:100%;
+  padding:17px;
+  border:none;
+  border-radius:17px;
+  color:white;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(135deg,#00c6ff,#536dfe,#9b4dff);
+  box-shadow:0 12px 30px rgba(65,110,255,.25);
+  transition:.2s;
+}
+
+.calculate:active{
+  transform:scale(.98);
+}
+
+/* Results */
+.results{
+  display:none;
+}
+
+.result-main{
+  text-align:center;
+  padding:20px 10px;
+  border-radius:20px;
+  background:linear-gradient(
+    135deg,
+    rgba(0,213,255,.12),
+    rgba(127,77,255,.12)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  margin-bottom:16px;
+}
+
+.result-main small{
+  color:#aeb9d7;
+}
+
+.big-result{
+  font-size:30px;
+  font-weight:900;
+  margin-top:9px;
+  background:linear-gradient(90deg,#00e5ff,#fff,#9e8cff);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.stat{
+  padding:16px;
+  border-radius:18px;
+  background:#0a1125;
+  border:1px solid #202d4b;
+}
+
+.stat .emoji{
+  font-size:22px;
+}
+
+.stat span{
+  display:block;
+  color:#8995b7;
+  font-size:12px;
+  margin-top:7px;
+}
+
+.stat strong{
+  display:block;
+  margin-top:5px;
+  font-size:17px;
+}
+
+/* Info */
+.info{
+  padding:15px;
+  border-radius:17px;
+  background:rgba(0,210,255,.06);
+  border:1px solid rgba(0,210,255,.12);
+  color:#b8c5e2;
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* Footer */
+.footer{
+  text-align:center;
+  color:#707c9e;
+  font-size:12px;
+  padding:5px 20px 25px;
+}
+
+.reset{
+  margin-top:12px;
+  width:100%;
+  padding:13px;
+  border-radius:14px;
+  border:1px solid #2c395a;
+  background:transparent;
+  color:#aeb9d6;
+  cursor:pointer;
+}
+
+/* Mobile */
+@media(max-width:500px){
+  .header h1{
+    font-size:23px;
+  }
+
+  .card{
+    padding:18px;
+    border-radius:23px;
+  }
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .big-result{
+    font-size:25px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <!-- Top App Header -->
-    <header>
-        <i class="fa-solid fa-robot"></i> AI Smart Assistant Pro
-    </header>
+<header class="header">
+  <div class="logo">⌛</div>
+  <h1>Age & Service Calculator</h1>
+  <p>Calculate your exact age and service duration</p>
+</header>
 
-    <!-- Navigation Tabs -->
-    <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('image-tab', this)">
-            <i class="fa-solid fa-image"></i> AI Image
-        </button>
-        <button class="tab-btn" onclick="switchTab('text-tab', this)">
-            <i class="fa-solid fa-pen-nib"></i> AI Writer
-        </button>
+<main class="container">
+
+  <!-- Input Card -->
+  <section class="card">
+
+    <div class="section-title">
+      <div class="icon">📅</div>
+      <div>Enter Your Details</div>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="content-area">
+    <div class="input-group">
+      <label>Date of Birth</label>
+      <input type="date" id="dob">
+    </div>
 
-        <!-- Tab 1: AI Image Generator -->
-        <div id="image-tab" class="tab-content active">
-            <textarea id="img-prompt" placeholder="Write image description (e.g. A futuristic sports car in neon city at night, 8k resolution)..."></textarea>
+    <div class="input-group">
+      <label>Joining / Service Start Date</label>
+      <input type="date" id="joining">
+    </div>
 
-            <button class="btn-primary" onclick="generateImage()">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Image
-            </button>
+    <div class="input-group">
+      <label>Calculate Up To</label>
+      <input type="date" id="currentDate">
+    </div>
 
-            <div class="output-box">
-                <p id="img-placeholder" style="color: #8b949e;">Your AI photo will appear here</p>
-                <div id="img-loading" class="loading-spinner">
-                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Creating image...
-                </div>
-                <img id="generated-img" alt="AI Generated Image">
-            </div>
-        </div>
+    <button class="calculate" onclick="calculateAll()">
+      ✨ Calculate Now
+    </button>
 
-        <!-- Tab 2: AI Text / Caption / Post Writer -->
-        <div id="text-tab" class="tab-content">
-            <select id="writer-type">
-                <option value="caption">Social Media Caption / Hashtags</option>
-                <option value="email">Professional Email</option>
-                <option value="story">Creative Short Story</option>
-            </select>
+  </section>
 
-            <textarea id="text-prompt" placeholder="Write topic or details (e.g. Write a catchy Instagram caption for traveling to mountains)..."></textarea>
 
-            <button class="btn-primary" onclick="generateText()">
-                <i class="fa-solid fa-paper-plane"></i> Generate Content
-            </button>
+  <!-- Results -->
+  <section class="card results" id="results">
 
-            <div class="output-box">
-                <p id="text-placeholder" style="color: #8b949e;">Generated text will appear here</p>
-                <div id="text-loading" class="loading-spinner">
-                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Writing text...
-                </div>
-                <div id="generated-text" class="output-text"></div>
-            </div>
-        </div>
+    <div class="section-title">
+      <div class="icon">📊</div>
+      <div>Your Results</div>
+    </div>
+
+    <div class="result-main">
+      <small>Current Age</small>
+      <div class="big-result" id="ageResult">
+        0 Years, 0 Months, 0 Days
+      </div>
+    </div>
+
+    <div class="result-main">
+      <small>Total Service</small>
+      <div class="big-result" id="serviceResult">
+        0 Years, 0 Months, 0 Days
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <div class="stat">
+        <div class="emoji">🎂</div>
+        <span>Next Birthday</span>
+        <strong id="birthdayResult">-</strong>
+      </div>
+
+      <div class="stat">
+        <div class="emoji">📆</div>
+        <span>Days Lived</span>
+        <strong id="daysLived">-</strong>
+      </div>
+
+      <div class="stat">
+        <div class="emoji">💼</div>
+        <span>Service Days</span>
+        <strong id="serviceDays">-</strong>
+      </div>
+
+      <div class="stat">
+        <div class="emoji">🎯</div>
+        <span>Age in Years</span>
+        <strong id="ageDecimal">-</strong>
+      </div>
 
     </div>
 
-    <!-- Bottom Banner for Monetization (Google AdMob Placeholder) -->
-    <div class="ad-banner">
-        📢 Ad Space (Google AdMob Integration Ready)
+    <br>
+
+    <div class="info" id="extraInfo">
+      Results will appear here.
     </div>
 
-    <script>
-        // Tab Switcher Logic
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    <button class="reset" onclick="resetCalculator()">
+      ↻ Reset Calculator
+    </button>
 
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
+  </section>
 
-        // 1. AI Image Generation Logic (Free API Integration)
-        function generateImage() {
-            const prompt = document.getElementById('img-prompt').value.trim();
-            const imgElement = document.getElementById('generated-img');
-            const placeholder = document.getElementById('img-placeholder');
-            const loading = document.getElementById('img-loading');
+</main>
 
-            if (!prompt) {
-                alert('Please enter an image prompt!');
-                return;
-            }
+<footer class="footer">
+  Age & Service Calculator • Simple • Fast • Mobile Friendly
+</footer>
 
-            imgElement.style.display = 'none';
-            placeholder.style.display = 'none';
-            loading.style.display = 'block';
 
-            const encodedPrompt = encodeURIComponent(prompt);
-            const seed = Math.floor(Math.random() * 100000);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${seed}&nologo=true`;
+<script>
 
-            imgElement.src = imageUrl;
+function daysBetween(a,b){
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.floor((b-a)/oneDay);
+}
 
-            imgElement.onload = function() {
-                loading.style.display = 'none';
-                imgElement.style.display = 'block';
-            };
 
-            imgElement.onerror = function() {
-                loading.style.display = 'none';
-                placeholder.innerText = '❌ Failed to load image. Try again.';
-                placeholder.style.display = 'block';
-            };
-        }
+function exactDifference(start,end){
 
-        // 2. AI Text Writer Logic
-        function generateText() {
-            const prompt = document.getElementById('text-prompt').value.trim();
-            const type = document.getElementById('writer-type').value;
-            const outputText = document.getElementById('generated-text');
-            const placeholder = document.getElementById('text-placeholder');
-            const loading = document.getElementById('text-loading');
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+  let days = end.getDate() - start.getDate();
 
-            if (!prompt) {
-                alert('Please enter topic details!');
-                return;
-            }
+  if(days < 0){
+    months--;
 
-            outputText.innerText = '';
-            placeholder.style.display = 'none';
-            loading.style.display = 'block';
+    const previousMonth =
+      new Date(end.getFullYear(),end.getMonth(),0);
 
-            // Auto Template Engine logic
-            setTimeout(() => {
-                loading.style.display = 'none';
+    days += previousMonth.getDate();
+  }
 
-                let result = '';
-                if (type === 'caption') {
-                    result = `✨ ${prompt.toUpperCase()} ✨\n\nLiving the best moments and capturing memories! 🌟\n\n#${prompt.replace(/\s+/g, '')} #Trending #Viral #LifeStyle #Motivation #AIGenerated`;
-                } else if (type === 'email') {
-                    result = `Subject: Regarding ${prompt}\n\nDear Team,\n\nI hope this email finds you well.\n\nI am writing to discuss ${prompt}. Please review the details and let me know your thoughts.\n\nBest regards,\n[Your Name]`;
-                } else {
-                    result = `Once upon a time, in a world full of wonder, the journey of ${prompt} began. Every step brought a new excitement and adventure that changed everything forever...`;
-                }
+  if(months < 0){
+    years--;
+    months += 12;
+  }
 
-                outputText.innerText = result;
-            }, 1200);
-        }
-    </script>
+  return {
+    years,
+    months,
+    days
+  };
+}
+
+
+function formatNumber(number){
+  return number.toLocaleString();
+}
+
+
+function calculateAll(){
+
+  const dobValue =
+    document.getElementById("dob").value;
+
+  const joiningValue =
+    document.getElementById("joining").value;
+
+  const currentValue =
+    document.getElementById("currentDate").value;
+
+  if(!dobValue || !joiningValue || !currentValue){
+    alert("Please enter all dates.");
+    return;
+  }
+
+  const dob =
+    new Date(dobValue + "T00:00:00");
+
+  const joining =
+    new Date(joiningValue + "T00:00:00");
+
+  const current =
+    new Date(currentValue + "T00:00:00");
+
+
+  if(dob > current){
+    alert("Date of Birth cannot be after the calculation date.");
+    return;
+  }
+
+  if(joining > current){
+    alert("Joining date cannot be after the calculation date.");
+    return;
+  }
+
+
+  const age =
+    exactDifference(dob,current);
+
+  const service =
+    exactDifference(joining,current);
+
+
+  const livedDays =
+    daysBetween(dob,current);
+
+  const serviceDaysValue =
+    daysBetween(joining,current);
+
+
+  document.getElementById("ageResult").textContent =
+    `${age.years} Years, ${age.months} Months, ${age.days} Days`;
+
+
+  document.getElementById("serviceResult").textContent =
+    `${service.years} Years, ${service.months} Months, ${service.days} Days`;
+
+
+  document.getElementById("daysLived").textContent =
+    formatNumber(livedDays);
+
+
+  document.getElementById("serviceDays").textContent =
+    formatNumber(serviceDaysValue);
+
+
+  const decimalAge =
+    (livedDays / 365.2425).toFixed(2);
+
+  document.getElementById("ageDecimal").textContent =
+    decimalAge + " Years";
+
+
+  /* Next Birthday */
+
+  let nextBirthday =
+    new Date(
+      current.getFullYear(),
+      dob.getMonth(),
+      dob.getDate()
+    );
+
+  if(nextBirthday < current){
+    nextBirthday =
+      new Date(
+        current.getFullYear()+1,
+        dob.getMonth(),
+        dob.getDate()
+      );
+  }
+
+  const birthdayDays =
+    daysBetween(current,nextBirthday);
+
+  document.getElementById("birthdayResult").textContent =
+    birthdayDays === 0
+      ? "Today 🎉"
+      : birthdayDays + " days";
+
+
+  document.getElementById("extraInfo").innerHTML =
+    `You are currently <b>${age.years} years</b> old
+     and have completed
+     <b>${service.years} years</b> of service.
+     <br><br>
+     Your exact calculation is based on the dates you entered.`;
+
+  document.getElementById("results").style.display =
+    "block";
+
+  document.getElementById("results")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+}
+
+
+function resetCalculator(){
+
+  document.getElementById("dob").value="";
+  document.getElementById("joining").value="";
+
+  document.getElementById("currentDate").value =
+    new Date().toISOString().split("T")[0];
+
+  document.getElementById("results").style.display =
+    "none";
+}
+
+
+/* Automatically use today's date */
+
+document.getElementById("currentDate").value =
+  new Date().toISOString().split("T")[0];
+
+</script>
+
 </body>
 </html>
